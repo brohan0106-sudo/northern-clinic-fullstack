@@ -1,9 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const db = require('./db');
+const { buildSeedData } = require('./seedData');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const DATA_FILE = path.join(DATA_DIR, 'clinic-data.json');
+
+let memCache = buildSeedData();
 
 db.connectDB().catch(() => {});
 
@@ -13,10 +16,8 @@ function ensureFile() {
   } catch (e) { /* serverless read-only filesystem */ }
   if (!fs.existsSync(DATA_FILE)) {
     try {
-      const seedModule = require('./seed');
-    } catch (e) {
-      console.warn('Fallback file seed initialization skipped:', e.message);
-    }
+      fs.writeFileSync(DATA_FILE, JSON.stringify(memCache, null, 2));
+    } catch (e) { /* serverless read-only filesystem */ }
   }
 }
 
@@ -25,14 +26,16 @@ function readAll() {
   try {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-      return JSON.parse(raw);
+      memCache = JSON.parse(raw);
+      return memCache;
     }
   } catch (e) { /* ignore read error */ }
-  return {};
+  return memCache;
 }
 
 let writeQueue = Promise.resolve();
 function writeAll(data) {
+  memCache = data;
   writeQueue = writeQueue.then(async () => {
     const content = JSON.stringify(data, null, 2);
     try {
@@ -78,6 +81,7 @@ async function update(mutator) {
 }
 
 async function initFromSeed(seedData) {
+  memCache = seedData;
   try {
     if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
     fs.writeFileSync(DATA_FILE, JSON.stringify(seedData, null, 2));

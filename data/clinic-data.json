@@ -1,0 +1,960 @@
+{
+  "users": [
+    {
+      "id": "b90e5522-b854-4fae-806f-e99e260c725f",
+      "username": "admin.user",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "Admin User",
+      "role": "admin",
+      "initials": "AU",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "c84aaae0-03cb-43e3-a125-36b83d9093a5",
+      "username": "r.nguyen",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "R. Nguyen",
+      "role": "reception",
+      "initials": "RN",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "ec724f5c-3ee8-4b45-932d-ca3cc989b23e",
+      "username": "dr.osei",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "Dr. A. Osei",
+      "role": "clinician",
+      "initials": "AO",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "40f56a22-d403-456d-b0fb-65b9dfb4a3d8",
+      "username": "dr.ibrahim",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "Dr. H. Ibrahim",
+      "role": "clinician",
+      "initials": "HI",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "727892e9-b33c-4663-8551-65234ba1b675",
+      "username": "dr.nasser",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "Dr. F. Nasser",
+      "role": "clinician",
+      "initials": "FN",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "80016f79-6bc6-4bac-918e-2aaafabb74ef",
+      "username": "k.patel",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "K. Patel",
+      "role": "billing",
+      "initials": "KP",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "5bb8d286-4d03-4d28-9d8f-ddebf7fbd42c",
+      "username": "m.alvarez",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "M. Alvarez",
+      "role": "patient",
+      "initials": "MA",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "972d7a69-96b5-491a-a8fe-314d87daca19",
+      "username": "t.nguyen",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "T. Nguyen",
+      "role": "patient",
+      "initials": "TN",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "d69948dd-4a2b-4652-a6e3-8b236d3225e5",
+      "username": "s.haddad",
+      "passwordHash": "$2a$10$26aXQCCXcJjqYtIvn8q38OQX/lzBR3f5IMNXKDi1d0IeRpjPU6xHy",
+      "name": "S. Haddad",
+      "role": "patient",
+      "initials": "SH",
+      "failedLogins": 0,
+      "lockedUntil": null
+    }
+  ],
+  "patients": [
+    {
+      "id": "4482",
+      "name": "M. Alvarez",
+      "dob": "14 Mar 1985",
+      "phone": "0412 889 012",
+      "allergies": "Penicillin",
+      "lastVisit": "22 Jul 2026",
+      "flag": "cardiology",
+      "insurancePayer": "Medibank",
+      "policyNumber": "MB-88213",
+      "emergencyContact": "Carlos Alvarez (0412 990 111)"
+    },
+    {
+      "id": "4519",
+      "name": "T. Nguyen",
+      "dob": "02 Nov 1992",
+      "phone": "0423 102 334",
+      "allergies": "None known",
+      "lastVisit": "New patient",
+      "flag": "new",
+      "insurancePayer": "Bupa",
+      "policyNumber": "BU-40921",
+      "emergencyContact": "Lien Nguyen (0423 881 992)"
+    },
+    {
+      "id": "4390",
+      "name": "S. Haddad",
+      "dob": "19 Jun 1958",
+      "phone": "0401 554 821",
+      "allergies": "Sulfa drugs",
+      "lastVisit": "30 Jun 2026",
+      "flag": "chronic",
+      "insurancePayer": "Medicare",
+      "policyNumber": "MC-11734",
+      "emergencyContact": "Farah Haddad (0401 223 900)"
+    },
+    {
+      "id": "4601",
+      "name": "B. Okafor",
+      "dob": "08 Jan 1997",
+      "phone": "0455 332 198",
+      "allergies": "None known",
+      "lastVisit": "05 Jul 2026",
+      "flag": "maternity",
+      "insurancePayer": "Bupa",
+      "policyNumber": "BU-55110",
+      "emergencyContact": "Chidi Okafor (0455 889 123)"
+    },
+    {
+      "id": "4237",
+      "name": "L. Tran",
+      "dob": "27 Sep 1970",
+      "phone": "0418 776 220",
+      "allergies": "Latex",
+      "lastVisit": "11 Jul 2026",
+      "flag": "cardiology",
+      "insurancePayer": "Medicare",
+      "policyNumber": "MC-99820",
+      "emergencyContact": "Minh Tran (0418 221 445)"
+    },
+    {
+      "id": "4702",
+      "name": "D. Petrova",
+      "dob": "04 Dec 1980",
+      "phone": "0499 112 400",
+      "allergies": "Aspirin",
+      "lastVisit": "18 Jul 2026",
+      "flag": "none",
+      "insurancePayer": "HCF",
+      "policyNumber": "HC-33109",
+      "emergencyContact": "Ivan Petrova (0499 001 223)"
+    },
+    {
+      "id": "4811",
+      "name": "J. Smith",
+      "dob": "11 Aug 1964",
+      "phone": "0477 665 443",
+      "allergies": "Codeine",
+      "lastVisit": "02 Aug 2026",
+      "flag": "chronic",
+      "insurancePayer": "Medibank",
+      "policyNumber": "MB-99120",
+      "emergencyContact": "Sarah Smith (0477 334 112)"
+    },
+    {
+      "id": "4925",
+      "name": "E. Clarke",
+      "dob": "23 Feb 2001",
+      "phone": "0434 221 009",
+      "allergies": "Peanuts",
+      "lastVisit": "04 Aug 2026",
+      "flag": "pediatric",
+      "insurancePayer": "NIB",
+      "policyNumber": "NI-77182",
+      "emergencyContact": "Helen Clarke (0434 998 120)"
+    }
+  ],
+  "doctors": [
+    {
+      "id": "f1fb6edf-2692-4a14-a62f-f3eb3d2cbb24",
+      "name": "Dr. A. Osei",
+      "specialization": "General Practice & Cardiology",
+      "department": "Cardiology",
+      "fee": 180,
+      "availableDays": "Mon, Tue, Thu, Fri",
+      "slots": [
+        "9:00 AM",
+        "9:30 AM",
+        "10:30 AM",
+        "1:00 PM"
+      ],
+      "bio": "Senior Consultant Cardiologist with 14 years experience."
+    },
+    {
+      "id": "20e09c3a-b7ac-460c-80da-ce9555d23f21",
+      "name": "Dr. H. Ibrahim",
+      "specialization": "Pediatrics & Chronic Care",
+      "department": "Pediatrics",
+      "fee": 160,
+      "availableDays": "Mon, Wed, Fri",
+      "slots": [
+        "10:00 AM",
+        "11:00 AM",
+        "2:00 PM"
+      ],
+      "bio": "Specialist Pediatrician & Family Health Consultant."
+    },
+    {
+      "id": "3314fb87-7aad-4eaf-a9ff-1ff39ff08645",
+      "name": "Dr. F. Nasser",
+      "specialization": "Obstetrics & Gynecology",
+      "department": "Obstetrics & Maternity",
+      "fee": 220,
+      "availableDays": "Tue, Wed, Thu",
+      "slots": [
+        "11:15 AM",
+        "1:30 PM",
+        "3:00 PM"
+      ],
+      "bio": "Lead Specialist in Maternal Health and Prenatal Ultrasound."
+    },
+    {
+      "id": "251945ac-50cb-4596-9636-3ca804dbdf4c",
+      "name": "Dr. K. Zhou",
+      "specialization": "Orthopedics & Sports Medicine",
+      "department": "Outpatient General",
+      "fee": 200,
+      "availableDays": "Mon, Thu",
+      "slots": [
+        "9:15 AM",
+        "11:00 AM",
+        "2:30 PM"
+      ],
+      "bio": "Orthopedic Consultant specializing in joint rehabilitation."
+    },
+    {
+      "id": "dbcdf2b7-cb98-4725-856a-3acc65e8f5dc",
+      "name": "Dr. E. Taylor",
+      "specialization": "Diagnostic Radiology",
+      "department": "Radiology & Imaging",
+      "fee": 250,
+      "availableDays": "Mon, Tue, Wed, Thu, Fri",
+      "slots": [
+        "8:30 AM",
+        "10:30 AM",
+        "1:30 PM"
+      ],
+      "bio": "Senior Radiologist in CT, MRI, and X-Ray diagnostics."
+    }
+  ],
+  "departments": [
+    {
+      "id": "dept-1",
+      "name": "Outpatient General",
+      "head": "Dr. K. Zhou",
+      "phone": "Ext 101",
+      "floor": "Level 1, Block A"
+    },
+    {
+      "id": "dept-2",
+      "name": "Cardiology",
+      "head": "Dr. A. Osei",
+      "phone": "Ext 102",
+      "floor": "Level 2, Block B"
+    },
+    {
+      "id": "dept-3",
+      "name": "Pediatrics",
+      "head": "Dr. H. Ibrahim",
+      "phone": "Ext 103",
+      "floor": "Level 1, Block C"
+    },
+    {
+      "id": "dept-4",
+      "name": "Obstetrics & Maternity",
+      "head": "Dr. F. Nasser",
+      "phone": "Ext 104",
+      "floor": "Level 3, Block A"
+    },
+    {
+      "id": "dept-5",
+      "name": "Radiology & Imaging",
+      "head": "Dr. E. Taylor",
+      "phone": "Ext 105",
+      "floor": "Ground Floor, Block B"
+    },
+    {
+      "id": "dept-6",
+      "name": "Pharmacy Dispensary",
+      "head": "Pharm. R. Sharma",
+      "phone": "Ext 106",
+      "floor": "Ground Floor, Foyer"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "f8a5135c-f1ed-4839-b927-8c86651bc42f",
+      "time": "9:00 AM",
+      "patient": "M. Alvarez",
+      "clinician": "Dr. Osei",
+      "type": "Follow-up",
+      "status": "Checked in",
+      "department": "Cardiology",
+      "date": "2026-08-08"
+    },
+    {
+      "id": "d8189e1a-dd02-4de4-bdc5-2e7719a1620d",
+      "time": "9:30 AM",
+      "patient": "T. Nguyen",
+      "clinician": "Dr. Osei",
+      "type": "New patient",
+      "status": "Waiting",
+      "department": "Outpatient General",
+      "date": "2026-08-08"
+    },
+    {
+      "id": "dcf56dca-2222-4ac4-b070-06299f134c3a",
+      "time": "10:00 AM",
+      "patient": "S. Haddad",
+      "clinician": "Dr. Ibrahim",
+      "type": "Chronic disease review",
+      "status": "Scheduled",
+      "department": "Pediatrics",
+      "date": "2026-08-08"
+    },
+    {
+      "id": "67a039aa-fb3e-46b2-94dd-608a50c49d0f",
+      "time": "10:30 AM",
+      "patient": "B. Okafor",
+      "clinician": "Dr. Osei",
+      "type": "Maternity check",
+      "status": "Scheduled",
+      "department": "Obstetrics & Maternity",
+      "date": "2026-08-08"
+    },
+    {
+      "id": "419e255a-c64c-4c7b-9b6b-a49f184ccf72",
+      "time": "11:15 AM",
+      "patient": "L. Tran",
+      "clinician": "Dr. Nasser",
+      "type": "Cardiology",
+      "status": "Scheduled",
+      "department": "Cardiology",
+      "date": "2026-08-08"
+    },
+    {
+      "id": "82110e51-ff05-4ba6-bf3d-8b90e2153b1c",
+      "time": "1:00 PM",
+      "patient": "D. Petrova",
+      "clinician": "Dr. Osei",
+      "type": "Follow-up",
+      "status": "Scheduled",
+      "department": "Cardiology",
+      "date": "2026-08-08"
+    },
+    {
+      "id": "959f72eb-0914-4012-b885-7863b9987071",
+      "time": "2:00 PM",
+      "patient": "J. Smith",
+      "clinician": "Dr. Zhou",
+      "type": "Orthopedic Consultation",
+      "status": "Scheduled",
+      "department": "Outpatient General",
+      "date": "2026-08-08"
+    },
+    {
+      "id": "313d0146-d25b-48a4-ac1a-e719d4cc4da7",
+      "time": "2:30 PM",
+      "patient": "E. Clarke",
+      "clinician": "Dr. Ibrahim",
+      "type": "Pediatric Checkup",
+      "status": "Scheduled",
+      "department": "Pediatrics",
+      "date": "2026-08-08"
+    }
+  ],
+  "medicalRecords": [
+    {
+      "id": "29bb2b7e-6a01-49aa-a244-ee441d9fa33f",
+      "patientName": "M. Alvarez",
+      "doctorName": "Dr. A. Osei",
+      "diagnosis": "Essential Hypertension (ICD I10)",
+      "bp": "138/86 mmHg",
+      "pulse": 72,
+      "notes": "Patient responding well to Amlodipine regimen. Follow up ECG in 3 months.",
+      "date": "2026-07-22"
+    },
+    {
+      "id": "7443d286-9e6d-4fb2-ab04-2d1f938608c3",
+      "patientName": "S. Haddad",
+      "doctorName": "Dr. H. Ibrahim",
+      "diagnosis": "Type 2 Diabetes Mellitus (ICD E11)",
+      "bp": "124/78 mmHg",
+      "pulse": 68,
+      "notes": "HbA1c stable at 6.8%. Diet regimen maintained.",
+      "date": "2026-06-30"
+    },
+    {
+      "id": "cdee56e2-b323-42e9-acb2-142eb1dbd515",
+      "patientName": "B. Okafor",
+      "doctorName": "Dr. F. Nasser",
+      "diagnosis": "Routine Antenatal Care - 24 Weeks (ICD Z34)",
+      "bp": "116/70 mmHg",
+      "pulse": 76,
+      "notes": "Fetal heartbeat clear at 144 bpm. Growth parameters normal.",
+      "date": "2026-07-05"
+    },
+    {
+      "id": "723e2fca-7ece-4a8a-b3ee-a9f9db6e7bda",
+      "patientName": "L. Tran",
+      "doctorName": "Dr. A. Osei",
+      "diagnosis": "Atypical Chest Discomfort (ICD R07.9)",
+      "bp": "130/82 mmHg",
+      "pulse": 74,
+      "notes": "Serial troponin negative. ECG sinus rhythm.",
+      "date": "2026-07-11"
+    }
+  ],
+  "prescriptions": [
+    {
+      "id": "RX-9901",
+      "patientName": "M. Alvarez",
+      "doctorName": "Dr. A. Osei",
+      "medication": "Amlodipine 5mg",
+      "dosage": "1 tablet daily",
+      "duration": "30 days",
+      "status": "Active",
+      "refillsLeft": 3
+    },
+    {
+      "id": "RX-9902",
+      "patientName": "M. Alvarez",
+      "doctorName": "Dr. A. Osei",
+      "medication": "Salbutamol 100mcg Inhaler",
+      "dosage": "2 puffs PRN for dyspnoea",
+      "duration": "60 days",
+      "status": "Active",
+      "refillsLeft": 2
+    },
+    {
+      "id": "RX-9903",
+      "patientName": "S. Haddad",
+      "doctorName": "Dr. H. Ibrahim",
+      "medication": "Metformin 500mg",
+      "dosage": "1 tablet twice daily with meals",
+      "duration": "90 days",
+      "status": "Active",
+      "refillsLeft": 4
+    },
+    {
+      "id": "RX-9904",
+      "patientName": "B. Okafor",
+      "doctorName": "Dr. F. Nasser",
+      "medication": "Elevit Prenatal Multivitamin",
+      "dosage": "1 tablet daily",
+      "duration": "90 days",
+      "status": "Active",
+      "refillsLeft": 2
+    }
+  ],
+  "insuranceCompanies": [
+    {
+      "id": "INS-01",
+      "name": "Medibank Private",
+      "payerCode": "MDB-AU",
+      "phone": "132 331",
+      "supportEmail": "claims@medibank.com.au",
+      "verificationPortal": "https://medibank-portal.demo"
+    },
+    {
+      "id": "INS-02",
+      "name": "Medicare Australia",
+      "payerCode": "MCR-GOV",
+      "phone": "132 011",
+      "supportEmail": "provider@medicare.gov.au",
+      "verificationPortal": "https://medicare-portal.demo"
+    },
+    {
+      "id": "INS-03",
+      "name": "Bupa Health Insurance",
+      "payerCode": "BUP-AU",
+      "phone": "134 135",
+      "supportEmail": "claims@bupa.com.au",
+      "verificationPortal": "https://bupa-portal.demo"
+    },
+    {
+      "id": "INS-04",
+      "name": "HCF Insurance",
+      "payerCode": "HCF-AU",
+      "phone": "131 372",
+      "supportEmail": "claims@hcf.com.au",
+      "verificationPortal": "https://hcf-portal.demo"
+    },
+    {
+      "id": "INS-05",
+      "name": "NIB Health",
+      "payerCode": "NIB-AU",
+      "phone": "131 463",
+      "supportEmail": "claims@nib.com.au",
+      "verificationPortal": "https://nib-portal.demo"
+    }
+  ],
+  "insurancePolicies": [
+    {
+      "policyId": "POL-101",
+      "patient": "M. Alvarez",
+      "payer": "Medibank",
+      "policyNumber": "MB-88213",
+      "tier": "Gold Comprehensive Extra",
+      "copay": 0,
+      "expiryDate": "31 Dec 2026",
+      "status": "Verified"
+    },
+    {
+      "policyId": "POL-102",
+      "patient": "T. Nguyen",
+      "payer": "Bupa",
+      "policyNumber": "BU-40921",
+      "tier": "Standard Hospital & Extras",
+      "copay": 25,
+      "expiryDate": "15 Nov 2026",
+      "status": "Pending"
+    },
+    {
+      "policyId": "POL-103",
+      "patient": "S. Haddad",
+      "payer": "Medicare",
+      "policyNumber": "MC-11734",
+      "tier": "Medicare Bulk-Billing",
+      "copay": 0,
+      "expiryDate": "30 Jun 2027",
+      "status": "Verified"
+    },
+    {
+      "policyId": "POL-104",
+      "patient": "B. Okafor",
+      "payer": "Bupa",
+      "policyNumber": "BU-55110",
+      "tier": "Corporate Health Care",
+      "copay": 35,
+      "expiryDate": "10 Aug 2026",
+      "status": "Action needed"
+    },
+    {
+      "policyId": "POL-105",
+      "patient": "L. Tran",
+      "payer": "Medicare",
+      "policyNumber": "MC-99820",
+      "tier": "Medicare Bulk-Billing",
+      "copay": 0,
+      "expiryDate": "31 Dec 2027",
+      "status": "Verified"
+    }
+  ],
+  "insurance": [
+    {
+      "policyId": "POL-101",
+      "patient": "M. Alvarez",
+      "payer": "Medibank",
+      "policyNumber": "MB-88213",
+      "tier": "Gold Comprehensive Extra",
+      "copay": 0,
+      "expiryDate": "31 Dec 2026",
+      "status": "Verified"
+    },
+    {
+      "policyId": "POL-102",
+      "patient": "T. Nguyen",
+      "payer": "Bupa",
+      "policyNumber": "BU-40921",
+      "tier": "Standard Hospital & Extras",
+      "copay": 25,
+      "expiryDate": "15 Nov 2026",
+      "status": "Pending"
+    },
+    {
+      "policyId": "POL-103",
+      "patient": "S. Haddad",
+      "payer": "Medicare",
+      "policyNumber": "MC-11734",
+      "tier": "Medicare Bulk-Billing",
+      "copay": 0,
+      "expiryDate": "30 Jun 2027",
+      "status": "Verified"
+    },
+    {
+      "policyId": "POL-104",
+      "patient": "B. Okafor",
+      "payer": "Bupa",
+      "policyNumber": "BU-55110",
+      "tier": "Corporate Health Care",
+      "copay": 35,
+      "expiryDate": "10 Aug 2026",
+      "status": "Action needed"
+    },
+    {
+      "policyId": "POL-105",
+      "patient": "L. Tran",
+      "payer": "Medicare",
+      "policyNumber": "MC-99820",
+      "tier": "Medicare Bulk-Billing",
+      "copay": 0,
+      "expiryDate": "31 Dec 2027",
+      "status": "Verified"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLM-10422",
+      "patient": "M. Alvarez",
+      "payer": "Medibank",
+      "amount": 182.4,
+      "status": "Paid",
+      "date": "22 Jul 2026",
+      "procedureCode": "CAR-01 (ECG & Consultation)"
+    },
+    {
+      "id": "CLM-10423",
+      "patient": "S. Haddad",
+      "payer": "Medicare",
+      "amount": 96,
+      "status": "Submitted",
+      "date": "30 Jun 2026",
+      "procedureCode": "GP-04 (Chronic Review)"
+    },
+    {
+      "id": "CLM-10424",
+      "patient": "B. Okafor",
+      "payer": "Bupa",
+      "amount": 340,
+      "status": "Rejected",
+      "date": "05 Jul 2026",
+      "procedureCode": "OBS-02 (Maternity Scan)"
+    },
+    {
+      "id": "CLM-10425",
+      "patient": "L. Tran",
+      "payer": "Medicare",
+      "amount": 210.15,
+      "status": "Submitted",
+      "date": "11 Jul 2026",
+      "procedureCode": "CAR-02 (Cardiology Consult)"
+    },
+    {
+      "id": "CLM-10426",
+      "patient": "D. Petrova",
+      "payer": "HCF",
+      "amount": 88.5,
+      "status": "Paid",
+      "date": "18 Jul 2026",
+      "procedureCode": "GP-01 (General Consult)"
+    },
+    {
+      "id": "CLM-10427",
+      "patient": "J. Smith",
+      "payer": "Medibank",
+      "amount": 240,
+      "status": "Submitted",
+      "date": "02 Aug 2026",
+      "procedureCode": "ORT-01 (Joint Consultation)"
+    }
+  ],
+  "insuranceClaims": [
+    {
+      "id": "CLM-10422",
+      "patient": "M. Alvarez",
+      "payer": "Medibank",
+      "amount": 182.4,
+      "status": "Paid",
+      "date": "22 Jul 2026",
+      "procedureCode": "CAR-01 (ECG & Consultation)"
+    },
+    {
+      "id": "CLM-10423",
+      "patient": "S. Haddad",
+      "payer": "Medicare",
+      "amount": 96,
+      "status": "Submitted",
+      "date": "30 Jun 2026",
+      "procedureCode": "GP-04 (Chronic Review)"
+    },
+    {
+      "id": "CLM-10424",
+      "patient": "B. Okafor",
+      "payer": "Bupa",
+      "amount": 340,
+      "status": "Rejected",
+      "date": "05 Jul 2026",
+      "procedureCode": "OBS-02 (Maternity Scan)"
+    },
+    {
+      "id": "CLM-10425",
+      "patient": "L. Tran",
+      "payer": "Medicare",
+      "amount": 210.15,
+      "status": "Submitted",
+      "date": "11 Jul 2026",
+      "procedureCode": "CAR-02 (Cardiology Consult)"
+    },
+    {
+      "id": "CLM-10426",
+      "patient": "D. Petrova",
+      "payer": "HCF",
+      "amount": 88.5,
+      "status": "Paid",
+      "date": "18 Jul 2026",
+      "procedureCode": "GP-01 (General Consult)"
+    },
+    {
+      "id": "CLM-10427",
+      "patient": "J. Smith",
+      "payer": "Medibank",
+      "amount": 240,
+      "status": "Submitted",
+      "date": "02 Aug 2026",
+      "procedureCode": "ORT-01 (Joint Consultation)"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "INV-2026-001",
+      "patientName": "M. Alvarez",
+      "date": "22 Jul 2026",
+      "items": [
+        {
+          "desc": "Cardiology Specialist Consult",
+          "fee": 180
+        },
+        {
+          "desc": "12-Lead Electrocardiogram (ECG)",
+          "fee": 65
+        }
+      ],
+      "subtotal": 245,
+      "insurerReimbursement": 182.4,
+      "patientCoPay": 62.6,
+      "status": "Paid"
+    },
+    {
+      "id": "INV-2026-002",
+      "patientName": "S. Haddad",
+      "date": "30 Jun 2026",
+      "items": [
+        {
+          "desc": "Chronic Disease Management Plan",
+          "fee": 160
+        }
+      ],
+      "subtotal": 160,
+      "insurerReimbursement": 96,
+      "patientCoPay": 64,
+      "status": "Issued"
+    },
+    {
+      "id": "INV-2026-003",
+      "patientName": "B. Okafor",
+      "date": "05 Jul 2026",
+      "items": [
+        {
+          "desc": "Prenatal Ultrasound Imaging",
+          "fee": 340
+        }
+      ],
+      "subtotal": 340,
+      "insurerReimbursement": 0,
+      "patientCoPay": 340,
+      "status": "Issued"
+    },
+    {
+      "id": "INV-2026-004",
+      "patientName": "L. Tran",
+      "date": "11 Jul 2026",
+      "items": [
+        {
+          "desc": "Cardiology Follow-up & Troponin Pathology",
+          "fee": 210.15
+        }
+      ],
+      "subtotal": 210.15,
+      "insurerReimbursement": 210.15,
+      "patientCoPay": 0,
+      "status": "Partially Paid"
+    }
+  ],
+  "payments": [
+    {
+      "id": "PAY-8801",
+      "invoiceId": "INV-2026-001",
+      "patientName": "M. Alvarez",
+      "amount": 62.6,
+      "method": "Credit Card (EFTPOS)",
+      "receiptRef": "REC-99182",
+      "date": "22 Jul 2026"
+    },
+    {
+      "id": "PAY-8802",
+      "invoiceId": "INV-2026-001",
+      "patientName": "Medibank Payout",
+      "amount": 182.4,
+      "method": "Direct Health Fund EFT",
+      "receiptRef": "EFT-44019",
+      "date": "24 Jul 2026"
+    },
+    {
+      "id": "PAY-8803",
+      "invoiceId": "INV-2026-004",
+      "patientName": "Medicare Settlement",
+      "amount": 210.15,
+      "method": "Medicare Direct Deposit",
+      "receiptRef": "MCR-88120",
+      "date": "15 Jul 2026"
+    }
+  ],
+  "billingStatements": [
+    {
+      "statementId": "STMT-2026-07-01",
+      "patientName": "M. Alvarez",
+      "period": "July 2026",
+      "totalBilled": 245,
+      "insurancePaid": 182.4,
+      "patientPaid": 62.6,
+      "balanceDue": 0,
+      "status": "Settled"
+    },
+    {
+      "statementId": "STMT-2026-07-02",
+      "patientName": "S. Haddad",
+      "period": "July 2026",
+      "totalBilled": 160,
+      "insurancePaid": 0,
+      "patientPaid": 0,
+      "balanceDue": 64,
+      "status": "Outstanding"
+    },
+    {
+      "statementId": "STMT-2026-07-03",
+      "patientName": "B. Okafor",
+      "period": "July 2026",
+      "totalBilled": 340,
+      "insurancePaid": 0,
+      "patientPaid": 0,
+      "balanceDue": 340,
+      "status": "Overdue"
+    }
+  ],
+  "messages": [
+    {
+      "id": "dc1f28a7-3f05-4fb3-9784-5791838eaf16",
+      "thread": "M. Alvarez",
+      "from": "M. Alvarez",
+      "to": "Dr. Osei",
+      "text": "Hi Dr. Osei, can I get my latest blood test results?",
+      "ts": 1786187663848
+    },
+    {
+      "id": "7186a570-6c69-4e76-9910-7d506bfa490c",
+      "thread": "M. Alvarez",
+      "from": "Dr. Osei",
+      "to": "M. Alvarez",
+      "text": "Morning! Yes — everything came back within normal range. I'll add the full report to your portal today.",
+      "ts": 1786188263848
+    },
+    {
+      "id": "7c758822-73c9-4d35-9573-2487a5f1e28b",
+      "thread": "T. Nguyen",
+      "from": "T. Nguyen",
+      "to": "R. Nguyen",
+      "text": "Hello, I would like to confirm my appointment time for tomorrow morning.",
+      "ts": 1786184063848
+    },
+    {
+      "id": "e44a2b90-fb0a-49ee-9f72-9da2a727185f",
+      "thread": "T. Nguyen",
+      "from": "R. Nguyen",
+      "to": "T. Nguyen",
+      "text": "Hi T. Nguyen, your appointment is confirmed for 9:30 AM with Dr. Osei.",
+      "ts": 1786185863848
+    }
+  ],
+  "dischargeSummaries": [
+    {
+      "id": "cf80ac60-8b7b-4d88-8fef-7dde092db8d0",
+      "patientName": "M. Alvarez",
+      "clinician": "Dr. A. Osei",
+      "chiefComplaint": "Shortness of breath and mild wheezing",
+      "findings": "Mild bronchial inflammation confirmed on examination; oxygen saturation 98%.",
+      "therapy": "Bronchodilator nebuliser administered in clinic; rapid symptom relief observed.",
+      "recommendations": "Follow up with GP in 7 days; avoid known allergens; seek immediate care if breathing deteriorates.",
+      "labResults": "Full blood count within normal parameters. Inflammatory markers negative.",
+      "ts": 1786104863848
+    }
+  ],
+  "auditLog": [
+    {
+      "id": "e8e7341c-b41e-4cf9-8529-ed38d05db403",
+      "ts": 1786187663848,
+      "actor": "system",
+      "role": "system",
+      "type": "system",
+      "action": "Data store seeded with enterprise demo accounts and sample records"
+    },
+    {
+      "id": "a1a535d2-22b4-4610-ac57-ffd31182b262",
+      "ts": 1786189463848,
+      "actor": "r.nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "User r.nguyen successfully passed MFA step 2"
+    },
+    {
+      "id": "851c6e92-0bcd-48e8-a582-0c24a0c960aa",
+      "ts": 1786190363848,
+      "actor": "dr.osei",
+      "role": "clinician",
+      "type": "access",
+      "action": "PHI viewed — Dr. A. Osei inspected patient record #4482"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "76ee1b21-783f-4b4e-a300-c165cd7ae184",
+      "user": "r.nguyen",
+      "title": "New Registration",
+      "message": "Patient T. Nguyen registered account online.",
+      "ts": 1786187663848,
+      "read": false
+    },
+    {
+      "id": "00a07d4e-f7b5-4a4f-ad80-5704f9a619c9",
+      "user": "k.patel",
+      "title": "Claim Status Updated",
+      "message": "Medibank claim CLM-10422 marked as Paid ($182.40).",
+      "ts": 1786184063848,
+      "read": true
+    },
+    {
+      "id": "d42353af-01ff-4770-9ba8-00fa47bb09c4",
+      "user": "dr.osei",
+      "title": "Lab Result Ready",
+      "message": "Pathology lab returned troponin results for L. Tran.",
+      "ts": 1786180463848,
+      "read": false
+    }
+  ],
+  "mfaChallenges": {}
+}
