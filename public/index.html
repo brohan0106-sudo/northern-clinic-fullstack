@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Northern Medical Clinic — Clinic Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<section id="loginScreen" class="login-screen">
+  <div class="login-brand">
+    <div class="login-brand-top">
+      <div class="brand-mark">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none"><path d="M17 3v28M3 17h28" stroke="#EAF4F2" stroke-width="3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="brand-name">Northern<span>Medical Clinic</span></div>
+    </div>
+
+    <h1 class="brand-headline">Best Care, secured at<br>every touchpoint.</h1>
+    <p class="brand-sub">Clinic Management System — the single platform reception, clinicians and billing use to run outpatient care across Melbourne's west.</p>
+
+    <div class="vitals-wrap" aria-hidden="true">
+      <svg class="vitals-line" viewBox="0 0 600 80" preserveAspectRatio="none">
+        <polyline points="0,40 60,40 80,10 100,70 120,40 260,40 280,15 300,65 320,40 460,40 480,8 500,72 520,40 600,40" />
+      </svg>
+    </div>
+
+    <ul class="values-ticker">
+      <li>Compassion</li><li>Accountability</li><li>Respect</li><li>Excellence</li><li>Safety</li>
+    </ul>
+  </div>
+
+  <div class="login-panel">
+    <div class="login-card" id="loginCard">
+
+      <!-- STEP 1: credentials -->
+      <div class="login-step" data-step="credentials">
+        <div class="login-eyebrow">Staff sign-in</div>
+        <h2>Welcome back</h2>
+        <p class="login-hint">Use one of the demo accounts below, or type your own — any password works in this simulated environment.</p>
+
+        <label class="field">
+          <span>Username</span>
+          <input type="text" id="username" placeholder="e.g. r.nguyen" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="off">
+        </label>
+
+        <div id="loginError" class="form-error" hidden></div>
+
+        <button class="btn btn-primary btn-block" id="btnContinue">Continue</button>
+
+        <div class="demo-accounts">
+          <div class="demo-accounts-label">Demo accounts (role is derived from username)</div>
+          <button class="demo-chip" data-user="admin.user" data-role="admin">admin.user <span>System Admin</span></button>
+          <button class="demo-chip" data-user="r.nguyen" data-role="reception">r.nguyen <span>Reception</span></button>
+          <button class="demo-chip" data-user="dr.osei" data-role="clinician">dr.osei <span>Clinician</span></button>
+          <button class="demo-chip" data-user="k.patel" data-role="billing">k.patel <span>Billing</span></button>
+          <button class="demo-chip" data-user="m.alvarez" data-role="patient">m.alvarez <span>Patient portal</span></button>
+        </div>
+
+        <button class="link-btn" id="btnShowRegister">New patient? Register for portal access</button>
+      </div>
+
+      <!-- STEP 3: patient self-registration -->
+      <div class="login-step" data-step="register" hidden>
+        <div class="login-eyebrow">Patient portal</div>
+        <h2>Register for an account</h2>
+        <p class="login-hint">We'll first check whether a record already exists for you, so the clinic never creates a duplicate patient file.</p>
+
+        <label class="field"><span>Full name</span><input type="text" id="regName" placeholder="e.g. M. Alvarez"></label>
+        <label class="field"><span>Date of birth</span><input type="text" id="regDob" placeholder="DD MMM YYYY, e.g. 14 Mar 1985"></label>
+
+        <div id="regLookupResult"></div>
+
+        <div id="regDetailsFields" hidden>
+          <label class="field"><span>Contact number</span><input type="text" id="regPhone" placeholder="04xx xxx xxx"></label>
+          <label class="field"><span>Known allergies</span><input type="text" id="regAllergies" placeholder="e.g. None known"></label>
+        </div>
+
+        <div class="login-step-actions">
+          <button class="btn btn-ghost" id="btnRegisterBack">Back</button>
+          <button class="btn btn-primary" id="btnRegisterCheck">Check my details</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: MFA -->
+      <div class="login-step" data-step="mfa" hidden>
+        <div class="login-eyebrow">Step 2 of 2 — Multi-factor authentication</div>
+        <h2>Enter your code</h2>
+        <p class="login-hint">HIPAA §164.312(d) requires person-or-entity authentication before access to ePHI. A 6-digit code has been sent to the registered device for <strong id="mfaUserLabel">this account</strong>.</p>
+
+        <div class="mfa-demo-code">
+          Demo code: <span id="mfaDemoCode">——</span>
+        </div>
+
+        <label class="field">
+          <span>Authentication code</span>
+          <input type="text" id="mfaInput" maxlength="6" inputmode="numeric" placeholder="000000" autocomplete="off">
+        </label>
+
+        <div id="mfaError" class="form-error" hidden></div>
+
+        <div class="login-step-actions">
+          <button class="btn btn-ghost" id="btnBack">Back</button>
+          <button class="btn btn-primary" id="btnVerify">Verify &amp; sign in</button>
+        </div>
+      </div>
+
+    </div>
+    <div class="login-footnote">Simulated environment for ICT3055 Assessment 3 — Northern Medical Clinic artefact. No real patient data is stored or transmitted.</div>
+  </div>
+</section>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app" class="app-shell" hidden>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand-mark small">
+        <svg width="22" height="22" viewBox="0 0 34 34" fill="none"><path d="M17 3v28M3 17h28" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"/></svg>
+      </div>
+      <span class="topbar-brand">Northern Medical Clinic</span>
+      <span class="topbar-divider"></span>
+      <span class="topbar-module" id="topbarModule">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" id="btnAudit" title="Security &amp; audit log" aria-label="Security and audit log">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span class="audit-dot"></span>
+      </button>
+      <div class="session-pill" id="sessionPill" title="Auto sign-out for inactivity">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3.2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span id="sessionTimer">15:00</span>
+      </div>
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">RN</div>
+        <div class="user-meta">
+          <div class="user-name" id="userName">R. Nguyen</div>
+          <div class="user-role" id="userRoleLabel">Reception</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-small" id="btnLogout">Sign out</button>
+    </div>
+  </header>
+
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <main class="content" id="content"></main>
+
+    <aside class="audit-drawer" id="auditDrawer">
+      <div class="audit-drawer-head">
+        <div>
+          <div class="audit-drawer-title">Security &amp; audit log</div>
+          <div class="audit-drawer-sub">Live feed · read access, MFA events, denials</div>
+        </div>
+        <button class="icon-btn" id="btnCloseAudit" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <svg class="audit-vitals" viewBox="0 0 300 46" preserveAspectRatio="none">
+        <polyline points="0,23 30,23 40,6 50,40 60,23 130,23 140,10 150,36 160,23 230,23 240,4 250,42 260,23 300,23" />
+      </svg>
+      <div id="auditControls" style="padding:10px 16px 0;"></div>
+      <ul class="audit-log" id="auditLog"></ul>
+    </aside>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

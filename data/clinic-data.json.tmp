@@ -1,0 +1,493 @@
+{
+  "users": [
+    {
+      "id": "169bd479-6e70-44d1-b9c0-410eabd4edea",
+      "username": "r.nguyen",
+      "passwordHash": "$2a$10$5Qb0GD7mLJAj4wg/BY850OV9KxIlskKtFrrQeh52e5IQI/qBk58O.",
+      "name": "R. Nguyen",
+      "role": "reception",
+      "initials": "RN",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "a4bed520-054a-41be-9ef0-0ded7770ee71",
+      "username": "dr.osei",
+      "passwordHash": "$2a$10$5Qb0GD7mLJAj4wg/BY850OV9KxIlskKtFrrQeh52e5IQI/qBk58O.",
+      "name": "Dr. A. Osei",
+      "role": "clinician",
+      "initials": "AO",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "4c3ebf7f-13f8-4c14-9b39-e4f986870782",
+      "username": "k.patel",
+      "passwordHash": "$2a$10$5Qb0GD7mLJAj4wg/BY850OV9KxIlskKtFrrQeh52e5IQI/qBk58O.",
+      "name": "K. Patel",
+      "role": "billing",
+      "initials": "KP",
+      "failedLogins": 0,
+      "lockedUntil": null
+    },
+    {
+      "id": "016ef90f-6f63-4d7d-9706-c0993baaf2d7",
+      "username": "m.alvarez",
+      "passwordHash": "$2a$10$5Qb0GD7mLJAj4wg/BY850OV9KxIlskKtFrrQeh52e5IQI/qBk58O.",
+      "name": "M. Alvarez",
+      "role": "patient",
+      "initials": "MA",
+      "failedLogins": 0,
+      "lockedUntil": null
+    }
+  ],
+  "patients": [
+    {
+      "id": "4482",
+      "name": "M. Alvarez",
+      "dob": "14 Mar 1985",
+      "allergies": "Penicillin",
+      "lastVisit": "22 Jul 2026",
+      "flag": "none"
+    },
+    {
+      "id": "4519",
+      "name": "T. Nguyen",
+      "dob": "02 Nov 1992",
+      "allergies": "None known",
+      "lastVisit": "New patient",
+      "flag": "new"
+    },
+    {
+      "id": "4390",
+      "name": "S. Haddad",
+      "dob": "19 Jun 1958",
+      "allergies": "Sulfa drugs",
+      "lastVisit": "30 Jun 2026",
+      "flag": "chronic"
+    },
+    {
+      "id": "4601",
+      "name": "B. Okafor",
+      "dob": "08 Jan 1997",
+      "allergies": "None known",
+      "lastVisit": "05 Jul 2026",
+      "flag": "maternity"
+    },
+    {
+      "id": "4237",
+      "name": "L. Tran",
+      "dob": "27 Sep 1970",
+      "allergies": "Latex",
+      "lastVisit": "11 Jul 2026",
+      "flag": "cardiology"
+    },
+    {
+      "id": "4705",
+      "name": "E. Vance",
+      "dob": "10 Oct 1995",
+      "allergies": "Dust",
+      "phone": "0412 345 678",
+      "lastVisit": "New patient",
+      "flag": "new"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "1a03669b-4dc3-4574-b008-141133581fb8",
+      "time": "9:00 AM",
+      "patient": "M. Alvarez",
+      "clinician": "Dr. Osei",
+      "type": "Follow-up",
+      "status": "Checked in"
+    },
+    {
+      "id": "77a3c7a4-4790-4022-b0ad-bbd761df8cfc",
+      "time": "9:30 AM",
+      "patient": "T. Nguyen",
+      "clinician": "Dr. Osei",
+      "type": "New patient",
+      "status": "Waiting"
+    },
+    {
+      "id": "3df7291e-ef92-4dc8-bacb-d9e16362d0cf",
+      "time": "10:00 AM",
+      "patient": "S. Haddad",
+      "clinician": "Dr. Ibrahim",
+      "type": "Chronic disease review",
+      "status": "Checked in"
+    },
+    {
+      "id": "a21e223e-888c-48ac-8424-7e41f6ae31ec",
+      "time": "10:30 AM",
+      "patient": "B. Okafor",
+      "clinician": "Dr. Osei",
+      "type": "Maternity check",
+      "status": "Scheduled"
+    },
+    {
+      "id": "e42bad9a-51b4-4793-8716-f8e2423d8496",
+      "time": "11:15 AM",
+      "patient": "L. Tran",
+      "clinician": "Dr. Nasser",
+      "type": "Cardiology",
+      "status": "Scheduled"
+    },
+    {
+      "id": "066d3f60-919c-43da-b1fb-9dce796cd40b",
+      "time": "1:00 PM",
+      "patient": "D. Petrova",
+      "clinician": "Dr. Osei",
+      "type": "Follow-up",
+      "status": "Scheduled"
+    },
+    {
+      "id": "1d8c8376-40dc-4acc-ab92-927f5cb16182",
+      "time": "2:30 PM",
+      "patient": "M. Alvarez",
+      "clinician": "Dr. Osei",
+      "type": "Routine checkup",
+      "status": "Scheduled"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLM-10422",
+      "patient": "M. Alvarez",
+      "payer": "Medibank",
+      "amount": 182.4,
+      "status": "Paid"
+    },
+    {
+      "id": "CLM-10423",
+      "patient": "S. Haddad",
+      "payer": "Medicare",
+      "amount": 96,
+      "status": "Submitted"
+    },
+    {
+      "id": "CLM-10424",
+      "patient": "B. Okafor",
+      "payer": "Bupa",
+      "amount": 340,
+      "status": "Rejected"
+    },
+    {
+      "id": "CLM-10425",
+      "patient": "L. Tran",
+      "payer": "Medicare",
+      "amount": 210.15,
+      "status": "Submitted"
+    },
+    {
+      "id": "CLM-10426",
+      "patient": "D. Petrova",
+      "payer": "HCF",
+      "amount": 88.5,
+      "status": "Paid"
+    }
+  ],
+  "insurance": [
+    {
+      "patient": "M. Alvarez",
+      "payer": "Medibank",
+      "policy": "MB-88213",
+      "coverage": "Gold Comprehensive Extra",
+      "copay": "$0.00",
+      "expiryDate": "31 Dec 2026",
+      "status": "Verified",
+      "actionNote": "Active coverage verified via Medibank Portal"
+    },
+    {
+      "patient": "T. Nguyen",
+      "payer": "Bupa",
+      "policy": "BU-40921",
+      "coverage": "Standard Hospital & Extras",
+      "copay": "$25.00",
+      "expiryDate": "15 Nov 2026",
+      "status": "Pending",
+      "actionNote": "Awaiting primary card scan from patient"
+    },
+    {
+      "patient": "S. Haddad",
+      "payer": "Medicare",
+      "policy": "MC-11734",
+      "coverage": "Medicare Bulk-Billing",
+      "copay": "$0.00",
+      "expiryDate": "30 Jun 2027",
+      "status": "Verified",
+      "actionNote": "Bulk-billing voucher valid for FY2026"
+    },
+    {
+      "patient": "B. Okafor",
+      "payer": "Bupa",
+      "policy": "BU-55110",
+      "coverage": "Corporate Health Care",
+      "copay": "$35.00",
+      "expiryDate": "10 Aug 2026",
+      "status": "Action needed",
+      "actionNote": "Pre-approval required for specialized maternity ultrasound"
+    }
+  ],
+  "messages": [
+    {
+      "id": "a8e272c6-181f-42c4-8630-3d11782b9af0",
+      "thread": "M. Alvarez",
+      "from": "M. Alvarez",
+      "to": "Dr. Osei",
+      "text": "Hi Dr. Osei, can I get my latest blood test results?",
+      "ts": 1786084354902
+    },
+    {
+      "id": "80130169-e311-498d-b1dd-81d09d3329ac",
+      "thread": "M. Alvarez",
+      "from": "Dr. Osei",
+      "to": "M. Alvarez",
+      "text": "Morning! Yes — everything came back within normal range. I'll add the full report to your portal today.",
+      "ts": 1786084954902
+    },
+    {
+      "id": "cbfe140d-1878-402a-87ce-212917d58399",
+      "thread": "M. Alvarez",
+      "from": "Dr. A. Osei",
+      "to": "M. Alvarez",
+      "text": "Please remember to take your medication daily.",
+      "ts": 1786087955253
+    }
+  ],
+  "dischargeSummaries": [
+    {
+      "id": "40b3dd58-77a1-4ad6-a158-2e96e84b5bb3",
+      "patientName": "M. Alvarez",
+      "clinician": "Dr. A. Osei",
+      "chiefComplaint": "Shortness of breath and mild wheezing",
+      "findings": "Mild bronchial inflammation confirmed on examination; oxygen saturation 98%.",
+      "therapy": "Bronchodilator nebuliser administered in clinic; rapid symptom relief observed.",
+      "recommendations": "Follow up with GP in 7 days; avoid known allergens; seek immediate care if breathing deteriorates.",
+      "labResults": "Full blood count within normal parameters. Inflammatory markers negative.",
+      "ts": 1786001554902
+    },
+    {
+      "id": "ae73d1a5-f0f0-416d-8eb8-45757f3b8489",
+      "patientName": "M. Alvarez",
+      "clinician": "Dr. A. Osei",
+      "chiefComplaint": "Shortness of breath",
+      "findings": "Bronchitis confirmed",
+      "therapy": "Inhaler prescribed",
+      "recommendations": "Follow up in 5 days",
+      "labResults": "Sputum culture negative, Chest X-ray clear",
+      "ts": 1786087955248
+    }
+  ],
+  "auditLog": [
+    {
+      "id": "a29f75b5-c882-47f2-b10d-b69826dda703",
+      "ts": 1786087954902,
+      "actor": "system",
+      "role": "system",
+      "type": "system",
+      "action": "Data store seeded with demo accounts and sample records"
+    },
+    {
+      "id": "38f40831-c9da-4f59-b486-561417b469f7",
+      "ts": 1786087954997,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "048109bc-19f1-430e-b9b8-d5c36abdb50d",
+      "ts": 1786087955017,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "47f89ff7-756c-460f-85a0-64f9fd8d1d3c",
+      "ts": 1786087955021,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Viewed appointments"
+    },
+    {
+      "id": "0d57af99-dd4c-4b61-838d-b150c639200e",
+      "ts": 1786087955024,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Checked in patient \"S. Haddad\" at reception"
+    },
+    {
+      "id": "28ba2190-398e-4d76-b612-a63a4fc08a8d",
+      "ts": 1786087955027,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Viewed insurance verification list (policy numbers masked)"
+    },
+    {
+      "id": "f9c2035e-fba8-4d4c-94f1-fe4a6f250787",
+      "ts": 1786087955085,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "<strong>PHI viewed:</strong> full insurance policy number unmasked for M. Alvarez"
+    },
+    {
+      "id": "b9e989bd-e35c-427a-b99c-78e08b3c8dc6",
+      "ts": 1786087955087,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "<strong>RFID Hardware Scan:</strong> Tag RFID-TAG-991 scanned at Reception Desk"
+    },
+    {
+      "id": "67b0a805-a0a5-4a58-bd4e-f586a84bc67e",
+      "ts": 1786087955090,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "<strong>Biometrics Hardware Verification:</strong> Fingerprint verified on BIO-SCANNER-01 (HIPAA high-security checkpoint)"
+    },
+    {
+      "id": "cac203fd-8251-429d-b46d-2d9db6b7d133",
+      "ts": 1786087955092,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "deny",
+      "action": "Access denied — reception role attempted a billing -only endpoint (GET /api/billing/accounts)"
+    },
+    {
+      "id": "334be890-cc52-4fd3-ae35-be8a6706aa43",
+      "ts": 1786087955165,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "5ea3d6ef-6334-4996-a885-ea45a631fad0",
+      "ts": 1786087955183,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "f9b5ac4e-c942-483b-b42e-21622386eaf8",
+      "ts": 1786087955186,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "access",
+      "action": "Viewed patient roster (MRNs masked)"
+    },
+    {
+      "id": "eb11209b-9783-400f-ad63-09ae25be0a12",
+      "ts": 1786087955243,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "deny",
+      "action": "<strong>PHI viewed:</strong> full MRN for patient #4482 unmasked (re-authenticated)"
+    },
+    {
+      "id": "08ea6a72-8959-4714-8b6f-c9346d278253",
+      "ts": 1786087955250,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "access",
+      "action": "Saved a discharge summary for M. Alvarez"
+    },
+    {
+      "id": "24e9a1e5-56aa-4e2a-a6b8-5627355f81b7",
+      "ts": 1786087955255,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "access",
+      "action": "Sent a secure message to M. Alvarez"
+    },
+    {
+      "id": "47b78d30-a8a2-4c7b-8b7b-2e7d789c2865",
+      "ts": 1786087955331,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "557390e4-2a96-4236-8317-3042f4c46d35",
+      "ts": 1786087955349,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "a7ec4c43-4c66-4481-95c9-6f6ca90fd4bc",
+      "ts": 1786087955351,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Viewed accounts & financial department metrics"
+    },
+    {
+      "id": "2e074925-92d3-4359-9425-009d3e19b77c",
+      "ts": 1786087955354,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Viewed claims & statements"
+    },
+    {
+      "id": "b8f20479-7b94-4ad3-b435-0406d0990db1",
+      "ts": 1786087955356,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "<strong>EXCEL_EXPORT:</strong> Exported claims and statement data to Excel"
+    },
+    {
+      "id": "8925f6f2-a2e9-4493-9cb3-7114cfb7581b",
+      "ts": 1786087955433,
+      "actor": "M. Alvarez",
+      "role": "patient",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "ec2610c3-841f-43ce-b9c9-267c6c0de2f8",
+      "ts": 1786087955453,
+      "actor": "M. Alvarez",
+      "role": "patient",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "2a9d583b-9ccf-4580-a38d-611551c3239c",
+      "ts": 1786087955460,
+      "actor": "M. Alvarez",
+      "role": "patient",
+      "type": "access",
+      "action": "Booked an appointment with Dr. Osei at 2:30 PM"
+    },
+    {
+      "id": "07732e12-e5bf-4685-9335-3b376138d21f",
+      "ts": 1786087955463,
+      "actor": "M. Alvarez",
+      "role": "patient",
+      "type": "deny",
+      "action": "Booking rejected — Dr. Osei / 2:30 PM already taken (double-booking prevented)"
+    },
+    {
+      "id": "1d68bd59-421d-47c1-b440-c9dbb1d03677",
+      "ts": 1786087955467,
+      "actor": "E. Vance",
+      "role": "anonymous",
+      "type": "access",
+      "action": "Patient registration lookup — no match"
+    }
+  ],
+  "mfaChallenges": {}
+}
