@@ -79,8 +79,8 @@ const TEST_PLAN = [
   },
   {
     id: 't8', name: 'Admin system security policy test',
-    desc: 'Admin role must own settings, users, and audit-logs modules.',
-    run: () => OWNED.admin.includes('settings') && OWNED.admin.includes('users') && OWNED.admin.includes('audit-logs'),
+    desc: 'Admin role must own settings and users modules, and must not have audit-logs access per security policy.',
+    run: () => OWNED.admin.includes('settings') && OWNED.admin.includes('users') && !OWNED.admin.includes('audit-logs'),
   },
 ];
 
