@@ -78,8 +78,12 @@ async function update(mutator) {
 }
 
 async function initFromSeed(seedData) {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFileSync(DATA_FILE, JSON.stringify(seedData, null, 2));
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(DATA_FILE, JSON.stringify(seedData, null, 2));
+  } catch (e) {
+    // Vercel serverless read-only filesystem, ignore EROFS
+  }
 
   const connected = await db.connectDB();
   if (connected && db.getIsConnected()) {

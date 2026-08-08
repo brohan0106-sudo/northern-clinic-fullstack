@@ -30,7 +30,8 @@ const workflowRoutes = require('./routes/workflow');
 // Auto-seed if data file does not exist (e.g. Vercel serverless environment)
 if (!fs.existsSync(DATA_FILE)) {
   try {
-    const seedModule = require('./seed');
+    const seedFn = require('./seed');
+    seedFn().catch(err => console.warn('Serverless seed note:', err.message));
   } catch (e) {
     console.warn('Data file initialization note:', e.message);
   }

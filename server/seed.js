@@ -200,7 +200,13 @@ async function seed() {
   console.log('Seeded data/clinic-data.json with 16 collections.');
   console.log('Demo accounts (all share password: "Clinic#2026"):');
   users.forEach(u => console.log(`  ${u.username.padEnd(12)} (${u.role})`));
-  process.exit(0);
+  if (require.main === module) {
+    process.exit(0);
+  }
 }
 
-seed();
+if (require.main === module) {
+  seed();
+}
+
+module.exports = seed;
