@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { v4: uuid } = require('uuid');
 
 const { update, readAll } = require('../store');
 const { logAudit } = require('../audit');
@@ -23,12 +22,12 @@ function cookieOptions(maxAgeMs) {
   return {
     httpOnly: true,
     sameSite: 'lax',
-    secure: IS_PROD, // requires HTTPS in production; local http demo needs this off
+    secure: IS_PROD,
     maxAge: maxAgeMs,
   };
 }
 
-// POST /api/auth/login  { username, password } -> { tempToken, expiresInSeconds, demoCode }
+// POST /api/auth/login { username, password }
 router.post('/login', loginLimiter, async (req, res) => {
   const { username, password } = req.body || {};
   if (!isValidUsername(username) || typeof password !== 'string' || !password) {
@@ -36,10 +35,8 @@ router.post('/login', loginLimiter, async (req, res) => {
   }
 
   const data = readAll();
-  const user = data.users.find(u => u.username === username.trim().toLowerCase());
+  const user = (data.users || []).find(u => u.username === username.trim().toLowerCase());
 
-  // Deliberately identical error for "no such user" and "wrong password" —
-  // distinguishing them lets an attacker enumerate valid usernames.
   const genericFail = () => res.status(401).json({ error: 'Incorrect username or password.' });
 
   if (!user) {
@@ -56,10 +53,12 @@ router.post('/login', loginLimiter, async (req, res) => {
   const passwordOk = bcrypt.compareSync(password, user.passwordHash);
   if (!passwordOk) {
     await update((d) => {
-      const u = d.users.find(x => x.id === user.id);
-      u.failedLogins = (u.failedLogins || 0) + 1;
-      if (u.failedLogins >= ACCOUNT_LOCK_THRESHOLD) {
-        u.lockedUntil = Date.now() + ACCOUNT_LOCK_MINUTES * 60000;
+      const u = (d.users || []).find(x => x.id === user.id);
+      if (u) {
+        u.failedLogins = (u.failedLogins || 0) + 1;
+        if (u.failedLogins >= ACCOUNT_LOCK_THRESHOLD) {
+          u.lockedUntil = Date.now() + ACCOUNT_LOCK_MINUTES * 60000;
+        }
       }
     });
     await logAudit({ actor: user.name, role: user.role, type: 'deny', action: `Login failed — incorrect password (attempt ${user.failedLogins + 1})` });
@@ -67,23 +66,23 @@ router.post('/login', loginLimiter, async (req, res) => {
   }
 
   await update((d) => {
-    const u = d.users.find(x => x.id === user.id);
-    u.failedLogins = 0;
-    u.lockedUntil = null;
+    const u = (d.users || []).find(x => x.id === user.id);
+    if (u) {
+      u.failedLogins = 0;
+      u.lockedUntil = null;
+    }
   });
 
-  // Issue an MFA challenge. In production the code would go out via SMS/email/
-  // authenticator app; there is no real delivery channel in this demo, so it
-  // is returned in the response and clearly labelled as such.
   const code = String(Math.floor(100000 + Math.random() * 900000));
-  const tempToken = uuid();
+  const codeHash = bcrypt.hashSync(code, 8);
   const expiresAt = Date.now() + MFA_CODE_TTL_MINUTES * 60000;
 
-  await update((d) => {
-    d.mfaChallenges[tempToken] = {
-      username: user.username, codeHash: bcrypt.hashSync(code, 8), expiresAt, attempts: 0,
-    };
-  });
+  // Stateless JWT tempToken for serverless compatibility across Vercel lambdas
+  const tempToken = jwt.sign(
+    { username: user.username, codeHash, expiresAt, type: 'mfa_temp' },
+    JWT_SECRET,
+    { expiresIn: `${MFA_CODE_TTL_MINUTES}m` }
+  );
 
   await logAudit({ actor: user.name, role: user.role, type: 'auth', action: 'Credential check passed — MFA challenge issued' });
 
@@ -91,41 +90,39 @@ router.post('/login', loginLimiter, async (req, res) => {
     tempToken,
     expiresInSeconds: MFA_CODE_TTL_MINUTES * 60,
     userLabel: user.name,
-    demoCode: code, // DEMO ONLY: a real deployment must never return the OTP in the response body.
+    demoCode: code,
   });
 });
 
-// POST /api/auth/verify-mfa  { tempToken, code } -> sets session cookie, returns user
+// POST /api/auth/verify-mfa { tempToken, code }
 router.post('/verify-mfa', mfaLimiter, async (req, res) => {
   const { tempToken, code } = req.body || {};
   if (typeof tempToken !== 'string' || typeof code !== 'string') {
     return res.status(400).json({ error: 'Missing verification code.' });
   }
 
-  const data = readAll();
-  const challenge = data.mfaChallenges[tempToken];
-  if (!challenge) return res.status(400).json({ error: 'This sign-in attempt has expired. Please start again.' });
-
-  if (Date.now() > challenge.expiresAt) {
-    await update((d) => { delete d.mfaChallenges[tempToken]; });
-    return res.status(400).json({ error: 'That code has expired. Please sign in again.' });
+  let challenge;
+  try {
+    challenge = jwt.verify(tempToken, JWT_SECRET);
+  } catch (err) {
+    return res.status(400).json({ error: 'This sign-in attempt has expired. Please start again.' });
   }
 
-  if (challenge.attempts >= 5) {
-    await update((d) => { delete d.mfaChallenges[tempToken]; });
-    await logAudit({ actor: challenge.username, role: 'unknown', type: 'deny', action: 'MFA challenge abandoned after too many incorrect attempts' });
-    return res.status(429).json({ error: 'Too many incorrect codes. Please sign in again.' });
+  if (challenge.type !== 'mfa_temp' || Date.now() > challenge.expiresAt) {
+    return res.status(400).json({ error: 'That code has expired. Please sign in again.' });
   }
 
   const ok = bcrypt.compareSync(code, challenge.codeHash);
   if (!ok) {
-    await update((d) => { d.mfaChallenges[tempToken].attempts += 1; });
-    await logAudit({ actor: challenge.username, role: 'unknown', type: 'deny', action: `MFA code incorrect (attempt ${challenge.attempts + 1})` });
+    await logAudit({ actor: challenge.username, role: 'unknown', type: 'deny', action: 'MFA code incorrect' });
     return res.status(401).json({ error: 'Incorrect code. Check the demo code and try again.' });
   }
 
-  const user = data.users.find(u => u.username === challenge.username);
-  await update((d) => { delete d.mfaChallenges[tempToken]; });
+  const data = readAll();
+  const user = (data.users || []).find(u => u.username === challenge.username);
+  if (!user) {
+    return res.status(401).json({ error: 'User account not found.' });
+  }
 
   const sessionMs = SESSION_TIMEOUT_MINUTES * 60000;
   const token = jwt.sign(
@@ -148,7 +145,7 @@ router.post('/logout', async (req, res) => {
     try {
       const payload = jwt.verify(token, JWT_SECRET);
       await logAudit({ actor: payload.name, role: payload.role, type: 'auth', action: 'Signed out' });
-    } catch { /* token already invalid — nothing to log against */ }
+    } catch { /* token already invalid */ }
   }
   res.json({ ok: true });
 });
