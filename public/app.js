@@ -1331,8 +1331,8 @@ function wireModule(route) {
       flag: $('#pFlag').value,
     };
     try {
-      await api('/api/register', { method: 'POST', body });
-      toast('Patient file created successfully.');
+      const res = await api('/api/register', { method: 'POST', body });
+      toast(res.message || 'Patient file and Patient Portal account created successfully.');
       window.location.hash = '#/patients';
     } catch (err) { toast(err.message); }
   });
