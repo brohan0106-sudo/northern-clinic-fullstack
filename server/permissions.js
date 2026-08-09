@@ -13,7 +13,7 @@ const OWNED = {
     'messages', 'consultants', 'workflow', 'audit-logs', 'testlog'
   ],
   billing: [
-    'dashboard', 'claims', 'statements', 'billing', 'payments', 'reports',
+    'dashboard', 'patients', 'claims', 'statements', 'billing', 'payments', 'reports',
     'accounts', 'messages', 'testlog', 'audit-logs'
   ],
   patient: [

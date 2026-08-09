@@ -639,6 +639,15 @@
   ],
   "claims": [
     {
+      "id": "CLM-73814",
+      "patient": "M. Alvarez",
+      "payer": "Medibank",
+      "amount": 195,
+      "status": "Submitted",
+      "date": "2026-08-09",
+      "procedureCode": "GP-01"
+    },
+    {
       "id": "CLM-14505",
       "patient": "M. Alvarez",
       "payer": "Medibank",
@@ -1305,6 +1314,17 @@
       "recommendations": "Follow up in 7 days.",
       "labResults": "Sputum culture negative. WBC 11.2.",
       "ts": 1786256253067
+    },
+    {
+      "id": "2d3da161-5e3c-4d3d-a056-ed5496f49ab0",
+      "patientName": "M. Alvarez",
+      "clinician": "Dr. A. Osei",
+      "chiefComplaint": "Acute productive cough &amp; dyspnoea",
+      "findings": "Bilateral bronchial inflammation confirmed on exam.",
+      "therapy": "Nebuliser &amp; Amoxicillin administered.",
+      "recommendations": "Follow up in 7 days.",
+      "labResults": "Sputum culture negative. WBC 11.2.",
+      "ts": 1786256354031
     }
   ],
   "auditLog": [
@@ -3015,6 +3035,150 @@
     {
       "id": "bf3097e2-1e75-4a18-ad66-1c7ef0de0323",
       "ts": 1786256253302,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Discharge Summary 5-Field Validation</strong> — PASS"
+    },
+    {
+      "id": "777ab470-92a5-4fbf-bfb6-67888a4d8bec",
+      "ts": 1786256353903,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "8e4eea8c-a325-4f86-af7a-b5b81f87368e",
+      "ts": 1786256353923,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "7497c260-f469-4a6a-952c-6b6edcc2f029",
+      "ts": 1786256353929,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Viewed patient roster (MRNs masked)"
+    },
+    {
+      "id": "96360dc9-3a21-4d6c-af76-12f138aeb3f3",
+      "ts": 1786256353934,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Insurance coverage for M. Alvarez updated to Verified"
+    },
+    {
+      "id": "f6f0ec37-9c0b-46df-b2b3-ea6193516e0d",
+      "ts": 1786256354010,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "dd23fce9-9133-44bc-bd12-ead985b66c40",
+      "ts": 1786256354029,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "b489f001-5b5a-4d0e-b200-2b49d000e7bb",
+      "ts": 1786256354033,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "access",
+      "action": "Saved a discharge summary for M. Alvarez"
+    },
+    {
+      "id": "d4dcc8df-b4ef-4f4f-96e3-741e57291982",
+      "ts": 1786256354109,
+      "actor": "M. Alvarez",
+      "role": "patient",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "bdf7856b-88b2-48c4-8526-f7dd8c5ee6e8",
+      "ts": 1786256354128,
+      "actor": "M. Alvarez",
+      "role": "patient",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "e7f23f2a-f604-4043-acf5-810cf0a7f545",
+      "ts": 1786256354132,
+      "actor": "M. Alvarez",
+      "role": "patient",
+      "type": "deny",
+      "action": "Booking rejected — Dr. H. Ibrahim / 1:30 PM already taken (double-booking prevented)"
+    },
+    {
+      "id": "ef05ab34-6970-4244-a670-19c7502df5bb",
+      "ts": 1786256354208,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "a2719783-4164-4a84-b1ef-363bca7f681e",
+      "ts": 1786256354226,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "315da98a-176e-4217-8236-2dc50b1f5285",
+      "ts": 1786256354230,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Submitted new insurance claim #CLM-73814 for M. Alvarez ($195.00)"
+    },
+    {
+      "id": "30ca614b-e8bc-4efb-8b87-0ec633f1a52f",
+      "ts": 1786256354261,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Auth Test & Account Lockout</strong> — PASS"
+    },
+    {
+      "id": "e708414c-292f-47ca-9410-c550518d7925",
+      "ts": 1786256354264,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>RBAC Access Enforcement</strong> — PASS"
+    },
+    {
+      "id": "43cd349b-f6b9-4721-b5bb-5e5b3779b4f4",
+      "ts": 1786256354265,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Double-Booking Conflict Prevention</strong> — PASS"
+    },
+    {
+      "id": "bb758eba-8d88-4092-a97e-6e5b7c9bb64e",
+      "ts": 1786256354267,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Duplicate Registration Rejection</strong> — PASS"
+    },
+    {
+      "id": "f469b66d-aadf-4e26-924e-574da7771361",
+      "ts": 1786256354269,
       "actor": "R. Nguyen",
       "role": "reception",
       "type": "access",

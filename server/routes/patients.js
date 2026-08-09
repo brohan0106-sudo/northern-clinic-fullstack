@@ -8,8 +8,8 @@ const router = express.Router();
 
 function maskId(id) { return `••••${String(id).slice(-3)}`; }
 
-// GET /api/patients — clinician, reception, admin; MRNs come back masked.
-router.get('/', requireAuth, requireRole('clinician', 'reception', 'admin'), async (req, res) => {
+// GET /api/patients — staff (admin, reception, clinician, billing); MRNs come back masked.
+router.get('/', requireAuth, requireRole('clinician', 'reception', 'admin', 'billing'), async (req, res) => {
   const data = readAll();
   const rows = (data.patients || []).map(p => ({ ...p, id: maskId(p.id), _fullId: undefined }));
   res.json({ patients: rows });
