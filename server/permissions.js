@@ -6,7 +6,7 @@ const OWNED = {
     'dashboard', 'users', 'roles', 'departments', 'settings', 'reports', 'consultants', 'patients', 'claims', 'billing', 'payments', 'statements', 'audit-logs'
   ],
   reception: [
-    'dashboard', 'add-patient', 'patients', 'insurance', 'messages', 'workflow', 'consultants', 'testlog', 'audit-logs'
+    'dashboard', 'add-patient', 'patients', 'insurance', 'workflow', 'testlog', 'audit-logs'
   ],
   clinician: [
     'dashboard', 'patients', 'medical-records', 'prescriptions', 'discharge',

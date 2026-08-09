@@ -39,7 +39,6 @@ const NAV = {
     { id: 'patients', label: 'Patient Roster & Search', icon: 'patients' },
     { id: 'insurance', label: 'Insurance Verification', icon: 'insurance' },
     { id: 'workflow', label: 'Care Workflow Stepper', icon: 'workflow' },
-    { id: 'messages', label: 'Secure Messaging', icon: 'messages' },
     { id: 'audit-logs', label: 'Security Audit Logs', icon: 'claims' },
   ],
   clinician: [

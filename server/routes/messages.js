@@ -8,13 +8,13 @@ const { sanitizeText } = require('../utils/sanitize');
 const router = express.Router();
 
 function canAccessThread(user, thread) {
-  if (['admin', 'reception', 'clinician', 'billing'].includes(user.role)) return true; // Hospital staff can respond to patient queries
-  if (user.role === 'patient') return thread.toLowerCase() === user.name.toLowerCase(); // Patients: own thread only
+  if (['clinician', 'billing'].includes(user.role)) return true; // Clinicians and Billing staff can respond to patient queries
+  if (user.role === 'patient') return thread.toLowerCase() === user.name.toLowerCase(); // Patients: own private thread ONLY
   return false;
 }
 
-// GET /api/messages/:thread — staff or patient's own thread
-router.get('/:thread', requireAuth, requireRole('admin', 'reception', 'clinician', 'billing', 'patient'), async (req, res) => {
+// GET /api/messages/:thread — clinician, billing, or patient's own private thread
+router.get('/:thread', requireAuth, requireRole('clinician', 'billing', 'patient'), async (req, res) => {
   const thread = decodeURIComponent(req.params.thread);
   if (!canAccessThread(req.user, thread)) {
     await logAudit({ actor: req.user.name, role: req.user.role, type: 'deny', action: `Attempted to open message thread "${thread}" belonging to another patient` });
@@ -25,8 +25,8 @@ router.get('/:thread', requireAuth, requireRole('admin', 'reception', 'clinician
   res.json({ thread, messages: msgs });
 });
 
-// POST /api/messages  { thread, to, text }
-router.post('/', requireAuth, requireRole('admin', 'reception', 'clinician', 'billing', 'patient'), async (req, res) => {
+// POST /api/messages { thread, to, text }
+router.post('/', requireAuth, requireRole('clinician', 'billing', 'patient'), async (req, res) => {
   const thread = String(req.body?.thread || '').trim();
   const to = String(req.body?.to || '').trim();
   const text = sanitizeText(req.body?.text, { maxLength: 1000 });
