@@ -8,19 +8,16 @@ const router = express.Router();
 
 function maskId(id) { return `••••${String(id).slice(-3)}`; }
 
-// GET /api/patients — clinician only; MRNs come back masked.
-router.get('/', requireAuth, requireRole('clinician'), async (req, res) => {
+// GET /api/patients — clinician, reception, admin; MRNs come back masked.
+router.get('/', requireAuth, requireRole('clinician', 'reception', 'admin'), async (req, res) => {
   const data = readAll();
-  const rows = data.patients.map(p => ({ ...p, id: maskId(p.id), _fullId: undefined }));
+  const rows = (data.patients || []).map(p => ({ ...p, id: maskId(p.id), _fullId: undefined }));
   res.json({ patients: rows });
   await logAudit({ actor: req.user.name, role: req.user.role, type: 'access', action: 'Viewed patient roster (MRNs masked)' });
 });
 
-// POST /api/patients/:id/reveal  { password } — re-authenticates the current
-// user before returning an unmasked MRN. This is the server-side backing for
-// the "Show" control in the UI; without it, unmasking would be purely
-// cosmetic since the full ID would already be sitting in the API response.
-router.post('/:id/reveal', requireAuth, requireRole('clinician'), async (req, res) => {
+// POST /api/patients/:id/reveal { password } — re-authenticates current user before returning unmasked MRN
+router.post('/:id/reveal', requireAuth, requireRole('clinician', 'reception', 'admin'), async (req, res) => {
   const { password } = req.body || {};
   if (typeof password !== 'string' || !password) {
     return res.status(400).json({ error: 'Re-enter your password to view this record.' });
@@ -37,14 +34,14 @@ router.post('/:id/reveal', requireAuth, requireRole('clinician'), async (req, re
   const patient = data.patients.find(p => p.id === req.params.id);
   if (!patient) return res.status(404).json({ error: 'Patient not found.' });
 
-  await logAudit({ actor: req.user.name, role: req.user.role, type: 'deny', action: `<strong>PHI viewed:</strong> full MRN for patient #${patient.id} unmasked (re-authenticated)` });
+  await logAudit({ actor: req.user.name, role: req.user.role, type: 'access', action: `<strong>PHI viewed:</strong> full MRN for patient #${patient.id} unmasked (re-authenticated)` });
   res.json({ id: patient.id });
 });
 
 // GET /api/patients/mine — the signed-in patient's own record.
 router.get('/mine', requireAuth, requireRole('patient'), (req, res) => {
   const data = readAll();
-  const me = data.patients.find(p => p.name === req.user.name);
+  const me = (data.patients || []).find(p => p.name === req.user.name);
   res.json({ patient: me || null });
 });
 

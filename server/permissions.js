@@ -3,10 +3,10 @@
  */
 const OWNED = {
   admin: [
-    'dashboard', 'users', 'roles', 'departments', 'settings', 'reports', 'consultants', 'claims', 'billing', 'payments', 'statements'
+    'dashboard', 'users', 'roles', 'departments', 'settings', 'reports', 'consultants', 'patients', 'claims', 'billing', 'payments', 'statements'
   ],
   reception: [
-    'dashboard', 'add-patient', 'insurance', 'messages', 'workflow', 'consultants', 'testlog'
+    'dashboard', 'add-patient', 'patients', 'insurance', 'messages', 'workflow', 'consultants', 'testlog'
   ],
   clinician: [
     'dashboard', 'patients', 'medical-records', 'prescriptions', 'discharge',
