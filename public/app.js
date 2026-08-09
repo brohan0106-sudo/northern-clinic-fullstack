@@ -61,7 +61,6 @@ const NAV = {
     { id: 'payments', label: 'Payment Tracking', icon: 'checkin' },
     { id: 'statements', label: 'Billing Statements', icon: 'accounts' },
     { id: 'reports', label: 'Financial Reports', icon: 'reports' },
-    { id: 'messages', label: 'Secure Messaging', icon: 'messages' },
     { id: 'audit-logs', label: 'Security Audit Logs', icon: 'claims' },
   ],
   patient: [
