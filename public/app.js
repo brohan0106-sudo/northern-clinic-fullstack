@@ -354,6 +354,18 @@ async function refreshAudit() {
     const data = await api('/api/audit');
     state.auditEntries = (data.entries || []).slice().reverse();
     renderAuditDrawer();
+    if (state.route === 'audit-logs') {
+      const tbody = $('#auditLogTableBody');
+      if (tbody) {
+        tbody.innerHTML = state.auditEntries.map(e => `<tr>
+          <td>${fmtTime(e.ts)}</td>
+          <td><strong>${escapeHtml(e.actor)}</strong></td>
+          <td><span class="chip chip-teal">${escapeHtml(e.role)}</span></td>
+          <td><span class="chip ${e.type === 'deny' ? 'chip-danger' : 'chip-neutral'}">${escapeHtml(e.type)}</span></td>
+          <td>${e.action}</td>
+        </tr>`).join('');
+      }
+    }
   } catch { /* session may have expired */ }
 }
 
@@ -952,10 +964,11 @@ async function renderDischarge() {
 /* ---------- Audit Logs ---------- */
 async function renderAuditLogs() {
   const { entries } = await api('/api/audit');
+  const rows = (entries || []).slice().reverse();
   return pageHead('Security Compliance', 'Security Audit Logs Feed', 'Immutable record of authentication events, PHI views, and access controls.') + `
     <div class="card">
-      <table><thead><tr><th>Timestamp</th><th>Actor</th><th>Role</th><th>Type</th><th>Action Log</th></tr></thead><tbody>
-        ${(entries || []).slice().reverse().map(e => `<tr>
+      <table><thead><tr><th>Timestamp</th><th>Actor</th><th>Role</th><th>Type</th><th>Action Log</th></tr></thead><tbody id="auditLogTableBody">
+        ${rows.map(e => `<tr>
           <td>${fmtTime(e.ts)}</td>
           <td><strong>${escapeHtml(e.actor)}</strong></td>
           <td><span class="chip chip-teal">${escapeHtml(e.role)}</span></td>
