@@ -613,7 +613,7 @@ async function renderDashboard() {
             <td>${escapeHtml(a.department || 'Outpatient General')}</td>
             <td>${escapeHtml(a.type)}</td>
             <td><span class="chip chip-success">Checked in</span></td>
-            <td><a href="#/discharge" class="btn btn-small btn-primary">Start Consultation / Discharge</a></td>
+            <td><a href="#/discharge?patient=${encodeURIComponent(a.patient)}" class="btn btn-small btn-primary">Start Consultation / Discharge</a></td>
           </tr>`).join('')}
         </tbody>
       </table>` : '<div class="empty-state">No checked-in patients waiting in consultation queue.</div>'}
@@ -1011,9 +1011,16 @@ async function renderWorkflow() {
 /* ---------- Discharge Summary ---------- */
 async function renderDischarge() {
   let patientOptions = '';
+  const hashParts = window.location.hash.split('?');
+  const urlParams = new URLSearchParams(hashParts[1] || '');
+  const preselectedPatient = urlParams.get('patient') || '';
+
   try {
     const { patients } = await api('/api/patients');
-    patientOptions = patients.map(p => `<option>${escapeHtml(p.name)}</option>`).join('');
+    patientOptions = patients.map(p => {
+      const isSel = preselectedPatient && preselectedPatient.toLowerCase() === p.name.toLowerCase();
+      return `<option value="${escapeHtml(p.name)}" ${isSel ? 'selected' : ''}>${escapeHtml(p.name)}</option>`;
+    }).join('');
   } catch { /* fall through */ }
 
   return pageHead('Clinical', 'Discharge Summary', 'Generated at the end of a course of treatment. Selecting a patient or clicking a template auto-populates all 5 required fields.') + `
