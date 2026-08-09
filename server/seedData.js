@@ -177,4 +177,6 @@ function buildSeedData() {
   };
 }
 
-module.exports = { buildSeedData, DEMO_PASSWORD };
+module.exports = buildSeedData;
+module.exports.buildSeedData = buildSeedData;
+module.exports.DEMO_PASSWORD = DEMO_PASSWORD;
