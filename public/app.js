@@ -498,23 +498,22 @@ async function render() {
 
 /* ---------- Tables ---------- */
 function appointmentsTable(rows) {
-  let displayRows = rows || [];
-  if (state.user?.role === 'reception') {
-    displayRows = displayRows.filter(a => a.status !== 'Checked in' && a.status !== 'Completed');
-  }
-  if (!displayRows.length) return '<div class="empty-state">No pending arrivals in reception waiting queue.</div>';
+  const displayRows = rows || [];
+  if (!displayRows.length) return '<div class="empty-state">No scheduled appointments for today.</div>';
   const canAct = state.user?.role === 'reception';
+
   return `<table><thead><tr><th>Time</th><th>Patient</th><th>Clinician</th><th>Department</th><th>Type</th><th>Status</th>${canAct ? '<th>Action</th>' : ''}</tr></thead><tbody>
     ${displayRows.map(a => {
-      const actionBtn = canAct 
+      const canCheckin = canAct && a.status !== 'Checked in' && a.status !== 'Completed';
+      const actionBtn = canCheckin 
         ? `<button class="btn btn-small btn-primary btn-checkin-action" data-checkin-name="${escapeHtml(a.patient)}">Check In</button>`
-        : '';
+        : (canAct ? '<span class="chip chip-success" style="font-size:11px;">Checked In</span>' : '');
       return `<tr>
-        <td><strong>${a.time}</strong></td>
-        <td>${escapeHtml(a.patient)}</td>
+        <td><strong>${escapeHtml(a.time)}</strong></td>
+        <td><strong>${escapeHtml(a.patient)}</strong></td>
         <td>${escapeHtml(a.clinician)}</td>
         <td>${escapeHtml(a.department || 'Outpatient General')}</td>
-        <td>${escapeHtml(a.type)}</td>
+        <td>${escapeHtml(a.type || 'Consultation')}</td>
         <td>${statusChip(a.status)}</td>
         ${canAct ? `<td>${actionBtn}</td>` : ''}
       </tr>`;
