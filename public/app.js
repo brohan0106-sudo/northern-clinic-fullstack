@@ -30,6 +30,7 @@ const NAV = {
     { id: 'consultants', label: 'Consultants Directory', icon: 'consultants' },
     { id: 'reports', label: 'Financial & Clinical Reports', icon: 'reports' },
     { id: 'settings', label: 'System Settings', icon: 'settings' },
+    { id: 'audit-logs', label: 'Security Audit Logs', icon: 'claims' },
   ],
   reception: [
     { section: 'Front Desk Operations' },
@@ -40,6 +41,7 @@ const NAV = {
     { id: 'consultants', label: 'Consultants & Schedules', icon: 'consultants' },
     { id: 'workflow', label: 'Care Workflow Stepper', icon: 'workflow' },
     { id: 'messages', label: 'Secure Messaging', icon: 'messages' },
+    { id: 'audit-logs', label: 'Security Audit Logs', icon: 'claims' },
   ],
   clinician: [
     { section: 'Clinical Operations' },
@@ -319,7 +321,7 @@ function enterApp() {
   $('#userName').textContent = state.user.name;
   $('#userRoleLabel').textContent = capitalize(state.user.role);
 
-  const hasAuditPermission = state.user.role === 'clinician';
+  const hasAuditPermission = ['admin', 'reception', 'clinician', 'billing'].includes(state.user.role);
   if ($('#btnAudit')) $('#btnAudit').style.display = hasAuditPermission ? 'flex' : 'none';
 
   buildSidebar();
@@ -344,7 +346,7 @@ function enterApp() {
 }
 
 function toggleAuditDrawer() {
-  if (state.user?.role !== 'clinician') return;
+  if (!['admin', 'reception', 'clinician', 'billing'].includes(state.user?.role)) return;
   $('#auditDrawer').classList.toggle('closed');
 }
 
@@ -370,7 +372,7 @@ function startSessionCountdown() {
 
 /* ---------- Audit drawer ---------- */
 async function refreshAudit() {
-  if (state.user?.role !== 'clinician') return;
+  if (!['admin', 'reception', 'clinician', 'billing'].includes(state.user?.role)) return;
   try {
     const data = await api('/api/audit');
     state.auditEntries = (data.entries || []).slice().reverse();

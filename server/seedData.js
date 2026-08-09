@@ -141,7 +141,6 @@ function buildSeedData() {
   ];
 
   const auditLog = [
-    { id: uuid(), ts: Date.now() - 3600000, actor: 'system', role: 'system', type: 'system', action: 'Data store seeded with enterprise demo accounts and sample records' },
     { id: uuid(), ts: Date.now() - 1800000, actor: 'r.nguyen', role: 'reception', type: 'auth', action: 'User r.nguyen successfully passed MFA step 2' },
     { id: uuid(), ts: Date.now() - 900000, actor: 'dr.osei', role: 'clinician', type: 'access', action: 'PHI viewed — Dr. A. Osei inspected patient record #4482' },
   ];
