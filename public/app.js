@@ -142,6 +142,9 @@ async function api(path, { method = 'GET', body } = {}) {
   let data = null;
   try { data = await res.json(); } catch { /* no body */ }
   if (!res.ok) {
+    if (res.status === 401 && !path.includes('/auth/login') && !path.includes('/auth/verify-mfa')) {
+      showLoginScreen();
+    }
     const err = new Error((data && data.error) || `Request failed (${res.status})`);
     err.status = res.status;
     err.fields = data && data.fields;
@@ -294,8 +297,22 @@ function showStep(step) {
 }
 
 /* ---------- App shell ---------- */
+function showLoginScreen() {
+  state.user = null;
+  clearInterval(state.auditPoll);
+  clearInterval(state.sessionHandle);
+  $('#app').hidden = true;
+  const login = $('#loginScreen');
+  if (login) login.style.display = 'grid';
+  showStep('credentials');
+  if (window.location.hash) {
+    history.replaceState(null, '', window.location.pathname);
+  }
+}
+
 function enterApp() {
-  $('#loginScreen').style.display = 'none';
+  const login = $('#loginScreen');
+  if (login) login.style.display = 'none';
   $('#app').hidden = false;
 
   $('#userAvatar').textContent = state.user.initials;
@@ -306,15 +323,19 @@ function enterApp() {
   if ($('#btnAudit')) $('#btnAudit').style.display = hasAuditPermission ? 'flex' : 'none';
 
   buildSidebar();
+  window.removeEventListener('hashchange', render);
   window.addEventListener('hashchange', render);
-  window.location.hash = '#/dashboard';
-  render();
+  if (!window.location.hash || window.location.hash === '#/') {
+    window.location.hash = '#/dashboard';
+  } else {
+    render();
+  }
 
   startSessionCountdown();
 
-  $('#btnLogout').addEventListener('click', () => doLogout('Signed out.'));
-  if ($('#btnAudit') && hasAuditPermission) $('#btnAudit').addEventListener('click', () => toggleAuditDrawer());
-  if ($('#btnCloseAudit')) $('#btnCloseAudit').addEventListener('click', () => $('#auditDrawer').classList.add('closed'));
+  $('#btnLogout').onclick = () => doLogout('Signed out.');
+  if ($('#btnAudit') && hasAuditPermission) $('#btnAudit').onclick = () => toggleAuditDrawer();
+  if ($('#btnCloseAudit')) $('#btnCloseAudit').onclick = () => $('#auditDrawer').classList.add('closed');
 
   if (hasAuditPermission) {
     refreshAudit();
@@ -328,11 +349,9 @@ function toggleAuditDrawer() {
 }
 
 async function doLogout(message) {
-  clearInterval(state.auditPoll);
-  clearInterval(state.sessionHandle);
   try { await api('/api/auth/logout', { method: 'POST' }); } catch { /* ignore */ }
-  toast(message);
-  setTimeout(() => window.location.reload(), 700);
+  if (message) toast(message);
+  showLoginScreen();
 }
 
 function startSessionCountdown() {
@@ -449,20 +468,29 @@ function updateSidebarActive(route) {
 }
 
 async function render() {
+  if (!state.user) {
+    showLoginScreen();
+    return;
+  }
   const hash = window.location.hash || '#/dashboard';
   const route = hash.replace(/^#\//, '') || 'dashboard';
   state.route = route;
 
   updateSidebarActive(route);
-  $('#topbarModule').textContent = MODULE_TITLE[route] || capitalize(route);
+  if ($('#topbarModule')) $('#topbarModule').textContent = MODULE_TITLE[route] || capitalize(route);
 
   const main = $('#content');
+  if (!main) return;
   const renderer = ROUTE_RENDERERS[route] || renderDashboard;
 
   try {
     main.innerHTML = await renderer();
     wireModule(route);
   } catch (e) {
+    if (e.status === 401 || (e.message && e.message.includes('Not signed in'))) {
+      showLoginScreen();
+      return;
+    }
     main.innerHTML = `<div class="notice notice-danger">${escapeHtml(e.message)}</div>`;
   }
 }
@@ -1549,5 +1577,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const data = await api('/api/auth/me');
     state.user = data.user;
     enterApp();
-  } catch { /* not signed in */ }
+  } catch {
+    showLoginScreen();
+  }
 });
