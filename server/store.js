@@ -7,7 +7,9 @@ const MONGODB_URI = process.env.MONGODB_URI;
 const DATA_DIR = path.join(__dirname, '../data');
 const DATA_FILE = path.join(DATA_DIR, 'clinic-data.json');
 
+// Memory store initialized with default structure
 let memCache = seedData();
+let isInitialized = false;
 
 // MongoDB Atlas optional Cloud persistence sync
 let mongoDb = null;
@@ -61,6 +63,7 @@ async function loadFromMongo() {
     if (messages && messages.length > 0) memCache.messages = messages;
     if (auditLog && auditLog.length > 0) memCache.auditLog = auditLog;
     if (dischargeSummaries && dischargeSummaries.length > 0) memCache.dischargeSummaries = dischargeSummaries;
+    isInitialized = true;
     console.log('Loaded active MongoDB Atlas data into memory store.');
   } catch (e) {
     console.warn('MongoDB Atlas load note:', e.message);
@@ -78,7 +81,6 @@ function ensureFile() {
   }
 }
 
-let isInitialized = false;
 function readAll() {
   if (!isInitialized) {
     ensureFile();
@@ -86,7 +88,10 @@ function readAll() {
       if (fs.existsSync(DATA_FILE)) {
         const raw = fs.readFileSync(DATA_FILE, 'utf-8');
         const fileData = JSON.parse(raw);
-        memCache = { ...fileData, ...memCache };
+        if (fileData && typeof fileData === 'object') {
+          // Persisted disk data takes absolute precedence over initial seed data!
+          memCache = { ...memCache, ...fileData };
+        }
       }
     } catch (e) { /* ignore read error */ }
     isInitialized = true;
