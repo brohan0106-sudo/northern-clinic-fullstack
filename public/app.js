@@ -694,8 +694,11 @@ async function renderInsurance() {
 
 /* ---------- 3. Interactive Claims Pipeline ---------- */
 async function renderClaims() {
-  const { claims } = await api('/api/claims');
+  const [{ claims }, { patients }] = await Promise.all([
+    api('/api/claims'), api('/api/patients')
+  ]);
   const canSubmit = ['billing', 'admin'].includes(state.user.role);
+  const patientOptions = (patients || []).map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)} (MRN: ${p.id})</option>`).join('');
 
   return pageHead('Claims Module', 'Insurance Claims & Approval Pipeline', 'Submit, verify eligibility, and track health fund claim approvals.') + `
     <div class="grid grid-3">
@@ -710,7 +713,12 @@ async function renderClaims() {
       <div class="card">
         <div class="card-head"><h3>Submit New Insurance Claim</h3></div>
         <form id="submitClaimForm">
-          <label class="field"><span>Patient Name</span><input type="text" id="clmPatient" placeholder="e.g. S. Haddad" required></label>
+          <label class="field"><span>Select Patient (MRN / Name)</span>
+            <select id="clmPatient" required>
+              <option value="">Select patient…</option>
+              ${patientOptions}
+            </select>
+          </label>
           <label class="field"><span>Health Fund / Payer</span>
             <select id="clmPayer">
               <option value="Medibank">Medibank Private</option>
@@ -729,8 +737,11 @@ async function renderClaims() {
 
 /* ---------- 4. Interactive Invoicing & Billing ---------- */
 async function renderBilling() {
-  const { claims, invoices } = await api('/api/billing');
+  const [{ claims, invoices }, { patients }] = await Promise.all([
+    api('/api/billing'), api('/api/patients')
+  ]);
   const canBill = ['billing', 'admin'].includes(state.user.role);
+  const patientOptions = (patients || []).map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)} (MRN: ${p.id})</option>`).join('');
 
   return pageHead('Billing Module', 'Invoice Generation & Charges', 'Create itemized patient bills, consultation charges, and procedure fees.') + `
     <div class="grid grid-3">
@@ -752,7 +763,12 @@ async function renderBilling() {
       <div class="card">
         <div class="card-head"><h3>Generate New Invoice</h3></div>
         <form id="createInvoiceForm">
-          <label class="field"><span>Patient Name</span><input type="text" id="invPatient" placeholder="e.g. M. Alvarez" required></label>
+          <label class="field"><span>Select Patient (MRN / Name)</span>
+            <select id="invPatient" required>
+              <option value="">Select patient…</option>
+              ${patientOptions}
+            </select>
+          </label>
           <label class="field"><span>Service Description</span><input type="text" id="invDesc" value="Consultation & 12-Lead ECG Imaging"></label>
           <label class="field"><span>Total Fee Amount ($)</span><input type="number" id="invTotal" value="245.00" step="5" required></label>
           <label class="field"><span>Insurer Share ($)</span><input type="number" id="invInsShare" value="182.40" step="5"></label>
@@ -764,8 +780,11 @@ async function renderBilling() {
 
 /* ---------- 5. Interactive Payment Tracking & Receipts ---------- */
 async function renderPayments() {
-  const { payments, invoices } = await api('/api/billing');
+  const [{ payments, invoices }, { patients }] = await Promise.all([
+    api('/api/billing'), api('/api/patients')
+  ]);
   const canPay = ['billing', 'admin'].includes(state.user.role);
+  const patientOptions = (patients || []).map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)} (MRN: ${p.id})</option>`).join('');
 
   return pageHead('Financial Operations', 'Payment Tracking & Receipt Settlement', 'Record co-pays, EFTPOS card payments, and insurance payouts.') + `
     <div class="grid grid-3">
@@ -787,7 +806,12 @@ async function renderPayments() {
         <div class="card-head"><h3>Record Payment Receipt</h3></div>
         <form id="recordPaymentForm">
           <label class="field"><span>Invoice ID</span><input type="text" id="payInvId" placeholder="e.g. INV-2026-001"></label>
-          <label class="field"><span>Patient Name</span><input type="text" id="payPatient" placeholder="e.g. M. Alvarez" required></label>
+          <label class="field"><span>Select Patient (MRN / Name)</span>
+            <select id="payPatient" required>
+              <option value="">Select patient…</option>
+              ${patientOptions}
+            </select>
+          </label>
           <label class="field"><span>Payment Amount ($)</span><input type="number" id="payAmount" value="62.60" step="1" required></label>
           <label class="field"><span>Payment Method</span>
             <select id="payMethod">
