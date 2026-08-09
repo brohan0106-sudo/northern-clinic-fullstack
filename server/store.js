@@ -1,55 +1,71 @@
 const fs = require('fs');
 const path = require('path');
-const db = require('./db');
-const { buildSeedData } = require('./seedData');
+const { MongoClient } = require('mongodb');
+const seedData = require('./seedData');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
+const MONGODB_URI = process.env.MONGODB_URI;
+const DATA_DIR = path.join(__dirname, '../data');
 const DATA_FILE = path.join(DATA_DIR, 'clinic-data.json');
 
-let memCache = buildSeedData();
+let memCache = seedData();
 
-// Connect to MongoDB and load persistent collections if present
-db.connectDB().then(async (connected) => {
-  if (connected && db.getIsConnected()) {
-    try {
-      const [
-        users, patients, doctors, departments, appointments,
-        medicalRecords, prescriptions, insuranceCompanies, insurancePolicies,
-        claims, invoices, payments, billingStatements, messages, auditLog, dischargeSummaries
-      ] = await Promise.all([
-        db.User.find({}).lean(), db.Patient.find({}).lean(), db.Doctor.find({}).lean(),
-        db.Department.find({}).lean(), db.Appointment.find({}).lean(), db.MedicalRecord.find({}).lean(),
-        db.Prescription.find({}).lean(), db.InsuranceCompany.find({}).lean(), db.InsurancePolicy.find({}).lean(),
-        db.Claim.find({}).lean(), db.Invoice.find({}).lean(), db.Payment.find({}).lean(),
-        db.BillingStatement.find({}).lean(), db.Message.find({}).lean(), db.AuditLog.find({}).lean(),
-        db.DischargeSummary.find({}).lean()
-      ]);
+// MongoDB Atlas optional Cloud persistence sync
+let mongoDb = null;
+if (MONGODB_URI) {
+  const client = new MongoClient(MONGODB_URI, { serverSelectionTimeoutMS: 5000 });
+  client.connect().then(() => {
+    mongoDb = client.db('northern_clinic');
+    console.log('Successfully connected to MongoDB Atlas Cloud Database!');
+    return loadFromMongo();
+  }).catch(err => {
+    console.warn('MongoDB Atlas connection note (using resilient memory store):', err.message);
+  });
+}
 
-      if (users && users.length > 0) memCache.users = users;
-      if (patients && patients.length > 0) memCache.patients = patients;
-      if (doctors && doctors.length > 0) memCache.doctors = doctors;
-      if (departments && departments.length > 0) memCache.departments = departments;
-      if (appointments && appointments.length > 0) memCache.appointments = appointments;
-      if (medicalRecords && medicalRecords.length > 0) memCache.medicalRecords = medicalRecords;
-      if (prescriptions && prescriptions.length > 0) memCache.prescriptions = prescriptions;
-      if (insuranceCompanies && insuranceCompanies.length > 0) memCache.insuranceCompanies = insuranceCompanies;
-      if (insurancePolicies && insurancePolicies.length > 0) {
-        memCache.insurancePolicies = insurancePolicies;
-        memCache.insurance = insurancePolicies;
-      }
-      if (claims && claims.length > 0) memCache.claims = claims;
-      if (invoices && invoices.length > 0) memCache.invoices = invoices;
-      if (payments && payments.length > 0) memCache.payments = payments;
-      if (billingStatements && billingStatements.length > 0) memCache.billingStatements = billingStatements;
-      if (messages && messages.length > 0) memCache.messages = messages;
-      if (auditLog && auditLog.length > 0) memCache.auditLog = auditLog;
-      if (dischargeSummaries && dischargeSummaries.length > 0) memCache.dischargeSummaries = dischargeSummaries;
-      console.log('Loaded active MongoDB Atlas data into memory store.');
-    } catch (e) {
-      console.warn('MongoDB Atlas load note:', e.message);
+async function loadFromMongo() {
+  if (!mongoDb) return;
+  try {
+    const users = await mongoDb.collection('users').find().toArray();
+    const patients = await mongoDb.collection('patients').find().toArray();
+    const doctors = await mongoDb.collection('doctors').find().toArray();
+    const departments = await mongoDb.collection('departments').find().toArray();
+    const appointments = await mongoDb.collection('appointments').find().toArray();
+    const medicalRecords = await mongoDb.collection('medicalRecords').find().toArray();
+    const prescriptions = await mongoDb.collection('prescriptions').find().toArray();
+    const insuranceCompanies = await mongoDb.collection('insuranceCompanies').find().toArray();
+    const insurancePolicies = await mongoDb.collection('insurancePolicies').find().toArray();
+    const claims = await mongoDb.collection('claims').find().toArray();
+    const invoices = await mongoDb.collection('invoices').find().toArray();
+    const payments = await mongoDb.collection('payments').find().toArray();
+    const billingStatements = await mongoDb.collection('billingStatements').find().toArray();
+    const messages = await mongoDb.collection('messages').find().toArray();
+    const auditLog = await mongoDb.collection('auditLog').find().toArray();
+    const dischargeSummaries = await mongoDb.collection('dischargeSummaries').find().toArray();
+
+    if (users && users.length > 0) memCache.users = users;
+    if (patients && patients.length > 0) memCache.patients = patients;
+    if (doctors && doctors.length > 0) memCache.doctors = doctors;
+    if (departments && departments.length > 0) memCache.departments = departments;
+    if (appointments && appointments.length > 0) memCache.appointments = appointments;
+    if (medicalRecords && medicalRecords.length > 0) memCache.medicalRecords = medicalRecords;
+    if (prescriptions && prescriptions.length > 0) memCache.prescriptions = prescriptions;
+    if (insuranceCompanies && insuranceCompanies.length > 0) memCache.insuranceCompanies = insuranceCompanies;
+    if (insurancePolicies && insurancePolicies.length > 0) {
+      memCache.insurancePolicies = insurancePolicies;
+      memCache.insurance = insurancePolicies;
     }
+    if (claims && claims.length > 0) memCache.claims = claims;
+    if (invoices && invoices.length > 0) memCache.invoices = invoices;
+    if (payments && payments.length > 0) memCache.payments = payments;
+    if (billingStatements && billingStatements.length > 0) memCache.billingStatements = billingStatements;
+    if (messages && messages.length > 0) memCache.messages = messages;
+    if (auditLog && auditLog.length > 0) memCache.auditLog = auditLog;
+    if (dischargeSummaries && dischargeSummaries.length > 0) memCache.dischargeSummaries = dischargeSummaries;
+    console.log('Loaded active MongoDB Atlas data into memory store.');
+  } catch (e) {
+    console.warn('MongoDB Atlas load note:', e.message);
   }
-}).catch(() => {});
+}
 
 function ensureFile() {
   try {
@@ -62,17 +78,19 @@ function ensureFile() {
   }
 }
 
+let isInitialized = false;
 function readAll() {
-  ensureFile();
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-      const fileData = JSON.parse(raw);
-      // Merge memory cache if it has newer MongoDB Atlas entries
-      memCache = { ...fileData, ...memCache };
-      return memCache;
-    }
-  } catch (e) { /* ignore read error */ }
+  if (!isInitialized) {
+    ensureFile();
+    try {
+      if (fs.existsSync(DATA_FILE)) {
+        const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+        const fileData = JSON.parse(raw);
+        memCache = { ...fileData, ...memCache };
+      }
+    } catch (e) { /* ignore read error */ }
+    isInitialized = true;
+  }
   return memCache;
 }
 
@@ -80,36 +98,29 @@ let writeQueue = Promise.resolve();
 function writeAll(data) {
   memCache = data;
   writeQueue = writeQueue.then(async () => {
-    const content = JSON.stringify(data, null, 2);
     try {
-      fs.writeFileSync(DATA_FILE, content);
-    } catch (err) {
-      // Serverless environment: filesystem is read-only, MongoDB Atlas handles persistence.
-    }
+      if (fs.existsSync(DATA_DIR)) {
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+      }
+    } catch (e) { /* serverless read-only filesystem */ }
 
-    if (db.getIsConnected()) {
+    if (mongoDb) {
       try {
-        if (data.users) await db.User.deleteMany({}).then(() => db.User.insertMany(data.users));
-        if (data.patients) await db.Patient.deleteMany({}).then(() => db.Patient.insertMany(data.patients));
-        if (data.doctors) await db.Doctor.deleteMany({}).then(() => db.Doctor.insertMany(data.doctors));
-        if (data.departments) await db.Department.deleteMany({}).then(() => db.Department.insertMany(data.departments));
-        if (data.appointments) await db.Appointment.deleteMany({}).then(() => db.Appointment.insertMany(data.appointments));
-        if (data.medicalRecords) await db.MedicalRecord.deleteMany({}).then(() => db.MedicalRecord.insertMany(data.medicalRecords));
-        if (data.prescriptions) await db.Prescription.deleteMany({}).then(() => db.Prescription.insertMany(data.prescriptions));
-        if (data.insuranceCompanies) await db.InsuranceCompany.deleteMany({}).then(() => db.InsuranceCompany.insertMany(data.insuranceCompanies));
-        if (data.insurance || data.insurancePolicies) {
-          const pols = data.insurance || data.insurancePolicies;
-          await db.InsurancePolicy.deleteMany({}).then(() => db.InsurancePolicy.insertMany(pols));
+        const collections = [
+          'users', 'patients', 'doctors', 'departments', 'appointments',
+          'medicalRecords', 'prescriptions', 'insuranceCompanies', 'insurancePolicies',
+          'claims', 'invoices', 'payments', 'billingStatements', 'messages', 'auditLog', 'dischargeSummaries'
+        ];
+        for (const col of collections) {
+          if (data[col] && Array.isArray(data[col])) {
+            await mongoDb.collection(col).deleteMany({});
+            if (data[col].length > 0) {
+              await mongoDb.collection(col).insertMany(data[col]);
+            }
+          }
         }
-        if (data.claims) await db.Claim.deleteMany({}).then(() => db.Claim.insertMany(data.claims));
-        if (data.invoices) await db.Invoice.deleteMany({}).then(() => db.Invoice.insertMany(data.invoices));
-        if (data.payments) await db.Payment.deleteMany({}).then(() => db.Payment.insertMany(data.payments));
-        if (data.billingStatements) await db.BillingStatement.deleteMany({}).then(() => db.BillingStatement.insertMany(data.billingStatements));
-        if (data.messages) await db.Message.deleteMany({}).then(() => db.Message.insertMany(data.messages));
-        if (data.auditLog) await db.AuditLog.deleteMany({}).then(() => db.AuditLog.insertMany(data.auditLog));
-        if (data.dischargeSummaries) await db.DischargeSummary.deleteMany({}).then(() => db.DischargeSummary.insertMany(data.dischargeSummaries));
-      } catch (e) {
-        // Fallback file persistence succeeded
+      } catch (err) {
+        console.warn('MongoDB Atlas async write error:', err.message);
       }
     }
   });
@@ -118,41 +129,9 @@ function writeAll(data) {
 
 async function update(mutator) {
   const data = readAll();
-  const result = mutator(data);
+  const result = await mutator(data);
   await writeAll(data);
   return result;
 }
 
-async function initFromSeed(seedData) {
-  const connected = await db.connectDB();
-  if (connected && db.getIsConnected()) {
-    try {
-      const existingPatients = await db.Patient.find({}).lean();
-      if (existingPatients && existingPatients.length > 0) {
-        console.log('MongoDB Atlas already contains persistent patient records — preserving live database.');
-        return;
-      }
-      if (seedData.users) await db.User.insertMany(seedData.users);
-      if (seedData.patients) await db.Patient.insertMany(seedData.patients);
-      if (seedData.doctors) await db.Doctor.insertMany(seedData.doctors);
-      if (seedData.departments) await db.Department.insertMany(seedData.departments);
-      if (seedData.appointments) await db.Appointment.insertMany(seedData.appointments);
-      if (seedData.medicalRecords) await db.MedicalRecord.insertMany(seedData.medicalRecords);
-      if (seedData.prescriptions) await db.Prescription.insertMany(seedData.prescriptions);
-      if (seedData.insuranceCompanies) await db.InsuranceCompany.insertMany(seedData.insuranceCompanies);
-      if (seedData.insurancePolicies) await db.InsurancePolicy.insertMany(seedData.insurancePolicies);
-      if (seedData.claims) await db.Claim.insertMany(seedData.claims);
-      if (seedData.invoices) await db.Invoice.insertMany(seedData.invoices);
-      if (seedData.payments) await db.Payment.insertMany(seedData.payments);
-      if (seedData.billingStatements) await db.BillingStatement.insertMany(seedData.billingStatements);
-      if (seedData.messages) await db.Message.insertMany(seedData.messages);
-      if (seedData.auditLog) await db.AuditLog.insertMany(seedData.auditLog);
-      if (seedData.dischargeSummaries) await db.DischargeSummary.insertMany(seedData.dischargeSummaries);
-      console.log('Synchronized MongoDB Atlas collections with initial seed data.');
-    } catch (err) {
-      console.warn('MongoDB sync note:', err.message);
-    }
-  }
-}
-
-module.exports = { readAll, writeAll, update, initFromSeed, DATA_FILE };
+module.exports = { readAll, writeAll, update };

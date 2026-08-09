@@ -38,7 +38,6 @@ const NAV = {
     { id: 'add-patient', label: 'Register Patient', icon: 'patients' },
     { id: 'patients', label: 'Patient Roster & Search', icon: 'patients' },
     { id: 'insurance', label: 'Insurance Verification', icon: 'insurance' },
-    { id: 'consultants', label: 'Consultants & Schedules', icon: 'consultants' },
     { id: 'workflow', label: 'Care Workflow Stepper', icon: 'workflow' },
     { id: 'messages', label: 'Secure Messaging', icon: 'messages' },
     { id: 'audit-logs', label: 'Security Audit Logs', icon: 'claims' },
@@ -501,14 +500,17 @@ async function render() {
 
 /* ---------- Tables ---------- */
 function appointmentsTable(rows) {
-  if (!rows || !rows.length) return '<div class="empty-state">No appointments to show.</div>';
+  let displayRows = rows || [];
+  if (state.user?.role === 'reception') {
+    displayRows = displayRows.filter(a => a.status !== 'Checked in' && a.status !== 'Completed');
+  }
+  if (!displayRows.length) return '<div class="empty-state">No pending arrivals in reception waiting queue.</div>';
   const canAct = state.user?.role === 'reception';
   return `<table><thead><tr><th>Time</th><th>Patient</th><th>Clinician</th><th>Department</th><th>Type</th><th>Status</th>${canAct ? '<th>Action</th>' : ''}</tr></thead><tbody>
-    ${rows.map(a => {
-      const canCheckin = canAct && a.status !== 'Checked in';
-      const actionBtn = canCheckin 
+    ${displayRows.map(a => {
+      const actionBtn = canAct 
         ? `<button class="btn btn-small btn-primary btn-checkin-action" data-checkin-name="${escapeHtml(a.patient)}">Check In</button>`
-        : (canAct ? '<span class="chip chip-success" style="font-size:11px;">Checked In</span>' : '');
+        : '';
       return `<tr>
         <td><strong>${a.time}</strong></td>
         <td>${escapeHtml(a.patient)}</td>
@@ -571,25 +573,52 @@ async function renderDashboard() {
   }
 
   if (role === 'reception') {
-    const { appointments } = await api('/api/appointments');
-    return pageHead('Reception', `Reception Dashboard & Check-In Roster`, "Full day schedule and live patient arrival check-in portal.") + `
+    const [{ appointments }, { insurance }] = await Promise.all([
+      api('/api/appointments'), api('/api/insurance')
+    ]);
+    const pendingArrivals = (appointments || []).filter(a => a.status !== 'Checked in' && a.status !== 'Completed');
+    const checkedInToday = (appointments || []).filter(a => a.status === 'Checked in').length;
+    const pendingInsurance = (insurance || []).filter(p => p.status === 'Pending').length;
+
+    return pageHead('Reception', `Reception Dashboard & Waiting Roster`, "Front-desk arrival check-in queue and pending health fund verifications.") + `
     <div class="grid grid-3" style="margin-bottom:18px;">
-      <div class="card stat-card"><div class="stat-label">Appointments Today</div><div class="stat-value">${appointments.length}</div></div>
-      <div class="card stat-card"><div class="stat-label">Checked In</div><div class="stat-value" style="color:var(--success);">${appointments.filter(a => a.status === 'Checked in').length} <small>/ ${appointments.length}</small></div></div>
-      <div class="card stat-card"><div class="stat-label">Waiting Arrival</div><div class="stat-value" style="color:var(--warn);">${appointments.filter(a => a.status === 'Waiting' || a.status === 'Scheduled').length}</div></div>
+      <div class="card stat-card"><div class="stat-label">Pending Arrival Check-In</div><div class="stat-value" style="color:var(--warn);">${pendingArrivals.length}</div></div>
+      <div class="card stat-card"><div class="stat-label">Checked In Today</div><div class="stat-value" style="color:var(--success);">${checkedInToday}</div></div>
+      <div class="card stat-card"><div class="stat-label">Pending Insurance Policies</div><div class="stat-value" style="color:var(--teal-300);">${pendingInsurance}</div></div>
     </div>
-    <div class="card"><div class="card-head"><h3>Today's Patient Roster &amp; Arrival Check-In</h3><span class="muted">${appointments.length} scheduled today</span></div>${appointmentsTable(appointments)}</div>`;
+    <div class="card"><div class="card-head"><h3>Today's Patient Arrival Check-In Roster (Waiting Queue)</h3><span class="muted">${pendingArrivals.length} waiting to check in</span></div>${appointmentsTable(appointments)}</div>`;
   }
 
   if (role === 'clinician') {
-    const { patients } = await api('/api/patients');
-    return pageHead('Clinical', `Welcome back, ${state.user.name}`, "Your patient roster and outstanding documentation.") + `
+    const [{ patients }, { appointments }] = await Promise.all([
+      api('/api/patients'), api('/api/appointments')
+    ]);
+    const checkedInQueue = (appointments || []).filter(a => a.status === 'Checked in');
+
+    return pageHead('Clinical', `Welcome back, ${state.user.name}`, "Your active consultation queue and clinical documentation portal.") + `
     <div class="grid grid-3" style="margin-bottom:18px;">
-      <div class="card stat-card"><div class="stat-label">Patients on roster</div><div class="stat-value">${patients.length}</div></div>
-      <div class="card stat-card"><div class="stat-label">New patients</div><div class="stat-value">${patients.filter(p => p.flag === 'new').length}</div></div>
-      <div class="card stat-card"><div class="stat-label">Chronic-care patients</div><div class="stat-value">${patients.filter(p => p.flag === 'chronic').length}</div></div>
+      <div class="card stat-card"><div class="stat-label">Checked-In Patients Queue</div><div class="stat-value" style="color:var(--teal-300);">${checkedInQueue.length}</div></div>
+      <div class="card stat-card"><div class="stat-label">Total Roster Patients</div><div class="stat-value">${patients.length}</div></div>
+      <div class="card stat-card"><div class="stat-label">New Patient Intakes</div><div class="stat-value">${patients.filter(p => p.flag === 'new').length}</div></div>
     </div>
-    <div class="card"><div class="card-head"><h3>Patient Roster</h3><span class="muted">MRNs masked by default</span></div>${patientsTable(patients.slice(0, 5))}</div>`;
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-head"><h3>Checked-In Patients Queue (Waiting for Doctor Consultation)</h3><span class="muted">${checkedInQueue.length} checked in</span></div>
+      ${checkedInQueue.length ? `
+      <table>
+        <thead><tr><th>Time</th><th>Patient</th><th>Department</th><th>Type</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          ${checkedInQueue.map(a => `<tr>
+            <td><strong>${a.time}</strong></td>
+            <td><strong>${escapeHtml(a.patient)}</strong></td>
+            <td>${escapeHtml(a.department || 'Outpatient General')}</td>
+            <td>${escapeHtml(a.type)}</td>
+            <td><span class="chip chip-success">Checked in</span></td>
+            <td><a href="#/discharge" class="btn btn-small btn-primary">Start Consultation / Discharge</a></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>` : '<div class="empty-state">No checked-in patients waiting in consultation queue.</div>'}
+    </div>
+    <div class="card"><div class="card-head"><h3>Recent Patient Roster</h3><span class="muted">MRNs masked by default</span></div>${patientsTable(patients.slice(0, 5))}</div>`;
   }
 
   if (role === 'patient') {
@@ -607,16 +636,16 @@ async function renderDashboard() {
   }
 
   // Billing Dashboard
-  const { claims } = await api('/api/claims');
+  const { claims, invoices } = await api('/api/billing/accounts');
   const outstanding = claims.filter(c => c.status !== 'Paid').reduce((s, c) => s + c.amount, 0);
-  const rejected = claims.filter(c => c.status === 'Rejected').length;
+  const pendingInvoices = (invoices || []).filter(i => i.status !== 'Paid').length;
   return pageHead('Billing', `Good morning, ${state.user.name.split(' ')[0]}`, "Claims pipeline and account balances.") + `
     <div class="grid grid-3" style="margin-bottom:18px;">
-      <div class="card stat-card"><div class="stat-label">Outstanding balance</div><div class="stat-value">${money(outstanding)}</div></div>
-      <div class="card stat-card"><div class="stat-label">Claims (all time)</div><div class="stat-value">${claims.length}</div></div>
-      <div class="card stat-card"><div class="stat-label">Rejected claims</div><div class="stat-value">${rejected}</div></div>
+      <div class="card stat-card"><div class="stat-label">Outstanding Receivables</div><div class="stat-value">${money(outstanding)}</div></div>
+      <div class="card stat-card"><div class="stat-label">Invoices Issued / Pending</div><div class="stat-value">${pendingInvoices}</div></div>
+      <div class="card stat-card"><div class="stat-label">Total Claims Processed</div><div class="stat-value">${claims.length}</div></div>
     </div>
-    <div class="card"><div class="card-head"><h3>Recent Claims</h3></div>${claimsTable(claims.slice(0, 6))}</div>`;
+    <div class="card"><div class="card-head"><h3>Recent Claims Pipeline</h3></div>${claimsTable(claims.slice(0, 6))}</div>`;
 }
 
 /* ---------- 2. Interactive Insurance Verification & Policy Registration ---------- */
