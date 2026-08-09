@@ -1,15 +1,15 @@
-# Northern Medical Clinic System — Live Demonstration & Feature Walkthrough Playbook
+# Northern Medical Clinic System — Live Demonstration & Presentation Playbook
 
 **Document Path**: `specs/live_demonstration_guide.md`  
-**Purpose**: Comprehensive step-by-step presentation guide for demonstrating the modernized Northern Medical Clinic platform, Role-Based Access Controls (RBAC), live Security Audit Logging, and technical features upgraded from legacy systems.
+**Purpose**: Comprehensive step-by-step presentation script for demonstrating the modernized Northern Medical Clinic platform, Role-Based Access Controls (RBAC), live Security Audit Logging, and real-time clinical workflows.
 
 ---
 
-## 1. Executive Summary & Legacy System Upgrades
+## 1. Executive Overview & Legacy System Upgrades
 
 ### Legacy System Shortcomings vs. Modernized Architecture
 
-| Legacy Clinic System | Modernized Northern Medical Clinic System |
+| Legacy Clinic Software | Modernized Northern Medical Clinic Enterprise System |
 | :--- | :--- |
 | **Monolithic File System / Single PC** | **Cloud-Native REST API + MongoDB Atlas Synchronization** |
 | **Static Hardcoded Access** | **Role-Based Access Control (RBAC)** across 5 distinct user roles |
@@ -55,9 +55,9 @@
 
 ---
 
-### 🎭 SCENE 2: Receptionist Workflow — Patient Intake & Insurance Verification
+### 🎭 SCENE 2: Receptionist Workflow — Patient Intake & Arrival Check-In
 
-**Objective**: Demonstrate patient intake, duplicate prevention, Patient Portal account auto-provisioning, and front-desk check-in.
+**Objective**: Demonstrate patient intake, duplicate prevention, Patient Portal account auto-provisioning, and queue transition upon check-in.
 
 #### Step 2.1: Register a New Patient
 1. Log in as Receptionist `r.nguyen` (Password: `Clinic#2026`, MFA Code: `123456`).
@@ -70,73 +70,69 @@
    - **Emergency Contact**: `Mark Williams (0412 888 777)`
 4. Click **Register Patient**.
 5. **What to point out**:
-   - Patient file is saved to MongoDB Atlas.
+   - Patient file is saved to memory and MongoDB Atlas.
    - **Patient Portal User Account Auto-Provisioned**: System displays toast notification:  
      *"Patient file created! Patient Portal login: Username 'jessica.williams', Password 'Clinic#2026'"*.
-   - Patient does **not** need to sign up again.
    - Page automatically redirects to **Patient Roster & Search** (`#/patients`).
 
-#### Step 2.2: Perform Arrival Check-In
+#### Step 2.2: Perform Arrival Check-In & Queue Transfer
 1. Navigate to **Dashboard & Check-In Roster** (`#/dashboard`).
-2. Locate scheduled patient in today's roster. Click **Check In**.
-3. **What happens**: Patient status updates live to `Checked in` for attending clinicians.
+2. Locate scheduled patient in today's pending waiting roster. Click **Check In**.
+3. **What to point out**:
+   - Patient status changes to `Checked in`.
+   - Patient automatically **disappears from Receptionist's waiting list** and moves into the **Doctor's Consultation Queue**.
 
 #### Step 2.3: Verify Patient Health Fund Coverage
 1. Navigate to **Insurance Verification** (`#/insurance`).
-2. Locate pending insurance policy (e.g. `T. Nguyen — Bupa`).
-3. Click **Verify & Resolve**.
-4. **What happens**: Policy status changes from `Pending` to `Verified` with verification notes logged to audit.
+2. Locate pending insurance policy (e.g. `T. Nguyen — Bupa`). Click **Verify & Resolve**.
+3. Policy status updates to `Verified` with action notes logged to audit.
 
 ---
 
-### 🎭 SCENE 3: Clinician Workflow — PHI Unmasking, Clinical Notes & 5-Field Discharge
+### 🎭 SCENE 3: Clinician Workflow — Consultation Queue, Auto-Fill Discharge & Messaging
 
-**Objective**: Demonstrate clinical vitals recording, e-Prescriptions, password re-authentication for unmasking MRNs, and discharge summaries.
+**Objective**: Demonstrate Doctor Consultation Queue, auto-filling patient name in discharge summary, and private doctor-patient messaging.
 
-#### Step 3.1: Password Re-Authentication for Unmasking PHI
+#### Step 3.1: Doctor Consultation Queue & Auto-Fill Discharge Summary
 1. Log in as Doctor `dr.osei` (Password: `Clinic#2026`, MFA Code: `123456`).
-2. Navigate to **Patient Roster** (`#/patients`).
-3. Point out that all MRNs are masked by default (`••••482`).
-4. Click **Show** next to `M. Alvarez`.
-5. Enter password `Clinic#2026` and click **Confirm Password**.
-6. **What happens**: Unmasks patient MRN `#4482` and generates a `PHI viewed` security audit log entry.
+2. On **Doctor Dashboard** (`#/dashboard`), locate **Checked-In Patients Queue**.
+3. Click **Start Consultation / Discharge** for patient `M. Alvarez`.
+4. **What to point out**:
+   - System navigates to **Discharge Summary** (`#/discharge?patient=M.%20Alvarez`).
+   - The **patient's name (`M. Alvarez`) is automatically pre-selected and auto-filled** in the `#dxPatient` dropdown.
+5. Click quick preset button **Acute Bronchitis** (auto-populates all 5 mandatory fields). Click **Save & Sign Off**.
+6. **What to point out**: Signing off the discharge summary **automatically generates an itemized Care Invoice** (`INV-2026-...`) for the patient.
 
-#### Step 3.2: Record Vitals & Clinical Progress Notes
-1. Navigate to **Medical Records** (`#/medical-records`).
-2. Fill out **Record Vitals & Progress Note** form:
-   - **Patient Name**: `Jessica Williams`
-   - **ICD Diagnosis**: `Acute Bronchitis (ICD J20)`
-   - **Blood Pressure**: `124/82 mmHg`
-   - **Pulse**: `76 bpm`
-   - **Clinical Progress Note**: `Patient presenting with productive cough. Lungs clear on auscultation.`
-3. Click **Save Clinical Record**.
-
-#### Step 3.3: Issue 5-Field Discharge Summary
-1. Navigate to **Discharge Summary** (`#/discharge`).
-2. Click quick preset button **Acute Bronchitis**.
-3. **What to point out**: All 5 mandatory clinical fields auto-populate (Chief Complaint, Findings, Therapy, Recommendations, Lab Results).
-4. Click **Save & Sign Off**.
+#### Step 3.2: Secure Doctor-Patient Messaging
+1. Navigate to **Secure Messaging** (`#/messages`).
+2. Open patient message thread `M. Alvarez`.
+3. Send follow-up advice: *"Your troponin lab results are clear. Continue prescribed therapy."*
+4. Log in as Patient `m.alvarez` $\rightarrow$ navigate to **Messaging** (`#/mymessages`) to view doctor's message in private thread.
 
 ---
 
-### 4. SCENE 4: Billing Specialist Workflow — Claims, Invoices & Payments
+### 🎭 SCENE 4: Patient Portal & Billing — Claims, Invoices & Payment Options
 
-**Objective**: Demonstrate financial operations, claims pipeline export, invoice generation, and payment receipts.
+**Objective**: Demonstrate patient billing options, MRN dropdown selection, and settlement.
 
+#### Step 4.1: Patient Invoice Options
+1. Log in as Patient `m.alvarez`. Navigate to **My Claims & Billing** (`#/mybilling`).
+2. Show active itemized invoice displaying Total Fee `$180.00`, Health Fund Share `$135.00`, and Copay `$45.00`.
+3. Demonstrate 2 Action Buttons:
+   - **File Insurance Claim**: Submits claim to Medibank/Medicare.
+   - **Pay Copay ($45.00)**: Direct card payment for remaining balance.
+
+#### Step 4.2: Billing Specialist Operations
 1. Log in as Billing Specialist `k.patel` (Password: `Clinic#2026`, MFA Code: `123456`).
-2. Navigate to **Claims & Insurance** (`#/claims`).
-3. Click **Export Claims Spreadsheet** to download `claims_export.xlsx`.
-4. Click **Submit Insurance Claim**, enter Patient `Jessica Williams`, Payer `Medibank`, Amount `$195.00`, and click **Submit Claim**.
-5. Navigate to **Invoice Generation** (`#/billing`). Generate an invoice specifying Subtotal `$195.00` and Insurer Share `$146.25`.
-6. Navigate to **Payment Tracking** (`#/payments`). Record EFTPOS payment receipt for `$48.75`.
+2. Navigate to **Claims & Insurance** (`#/claims`). Click **Export to Excel** (`claims_export.xlsx`).
+3. Click **Submit New Insurance Claim** $\rightarrow$ select patient using **Patient Name + MRN Dropdown** (`M. Alvarez (MRN: #4482)`). Click **Submit Claim**.
+4. Navigate to **Payment Tracking** (`#/payments`) $\rightarrow$ record EFTPOS payment receipt using MRN dropdown selector.
 
 ---
 
-### 🎭 SCENE 5: System Administrator Workflow & RBAC Isolation
+### 🎭 SCENE 5: Care Stepper & System Administration
 
-**Objective**: Demonstrate administrative controls, user account lockouts, and strict operational role boundaries.
+**Objective**: Demonstrate live 6-step care stepper calculation and admin account controls.
 
-1. Log in as System Admin `admin.user` (Password: `Clinic#2026`, MFA Code: `123456`).
-2. Navigate to **Users & Roles (RBAC)** (`#/users`).
-3. Show account lockout controls (System automatically locks accounts after 5 failed login attempts for 15 minutes; Admin can manually toggle lock/unlock).
-4. Navigate to **Consultants Directory** (`#/consultants`). Show that **only** System Admin has access to register new specialist consultants (`Register New Consultant`).
+1. Navigate to **Care Workflow Stepper** (`#/workflow`). Point out that the 6-step status (`1. Appointment` $\rightarrow$ `2. Arrival Check-In` $\rightarrow$ `3. Discharge & Invoice` $\rightarrow$ `4. Claim Filed` $\rightarrow$ `5. Claim Approval` $\rightarrow$ `6. Payment Settled`) calculates automatically from real system operations.
+2. Log in as Admin `admin.user`. Show user lockout management (`#/users`) and consultant registration (`#/consultants`).
