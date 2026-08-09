@@ -8,14 +8,14 @@ const router = express.Router();
 
 router.use(requireAuth);
 
-// GET /api/consultants
+// GET /api/consultants — viewable by staff
 router.get('/', (req, res) => {
   const data = readAll();
   res.json({ consultants: data.doctors || [] });
 });
 
-// POST /api/consultants — register new consultant (staff only)
-router.post('/', requireRole('admin', 'reception', 'clinician'), async (req, res) => {
+// POST /api/consultants — register new consultant (admin only)
+router.post('/', requireRole('admin'), async (req, res) => {
   const { name, specialization, department, fee, availableDays, bio } = req.body || {};
   if (!name || !specialization || !department) {
     return res.status(400).json({ error: 'Name, specialization, and department are required.' });

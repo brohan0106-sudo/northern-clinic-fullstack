@@ -14,7 +14,7 @@ const OWNED = {
   ],
   billing: [
     'dashboard', 'claims', 'statements', 'billing', 'payments', 'reports',
-    'accounts', 'testlog', 'audit-logs'
+    'accounts', 'messages', 'testlog', 'audit-logs'
   ],
   patient: [
     'dashboard', 'myappointments', 'myrecords', 'mybilling', 'mymessages', 'profile'

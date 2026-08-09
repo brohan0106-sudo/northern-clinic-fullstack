@@ -63,6 +63,8 @@ const NAV = {
     { id: 'payments', label: 'Payment Tracking', icon: 'checkin' },
     { id: 'statements', label: 'Billing Statements', icon: 'accounts' },
     { id: 'reports', label: 'Financial Reports', icon: 'reports' },
+    { id: 'messages', label: 'Secure Messaging', icon: 'messages' },
+    { id: 'audit-logs', label: 'Security Audit Logs', icon: 'claims' },
   ],
   patient: [
     { section: 'Patient Care Portal' },
@@ -845,7 +847,7 @@ async function renderConsultants() {
         <div style="font-size:11.5px; color:var(--teal-400); margin-top:8px;">📅 Available: ${escapeHtml(c.availableDays)}</div>
       </div>`).join('')}
     </div>
-    ${['admin', 'reception', 'clinician'].includes(state.user.role) ? `
+    ${state.user.role === 'admin' ? `
     <div class="card" style="max-width:550px;">
       <div class="card-head"><h3>Register New Consultant</h3></div>
       <form id="addConsultantForm">
