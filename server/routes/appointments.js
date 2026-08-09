@@ -9,42 +9,52 @@ const { sanitizeText } = require('../utils/sanitize');
 const router = express.Router();
 
 // GET /api/appointments — full schedule, staff only
-router.get('/', requireAuth, requireRole('reception', 'clinician'), async (req, res) => {
+router.get('/', requireAuth, async (req, res) => {
   const data = readAll();
-  res.json({ appointments: data.appointments });
+  if (req.user.role === 'patient') {
+    const mine = (data.appointments || []).filter(a => a.patient.toLowerCase() === req.user.name.toLowerCase());
+    return res.json({ appointments: mine });
+  }
+  res.json({ appointments: data.appointments || [] });
   await logAudit({ actor: req.user.name, role: req.user.role, type: 'access', action: 'Viewed appointments' });
 });
 
-// GET /api/my/appointments — the signed-in patient's own bookings only
+// GET /api/appointments/mine — the signed-in patient's own bookings
 router.get('/mine', requireAuth, requireRole('patient'), (req, res) => {
   const data = readAll();
-  const mine = data.appointments.filter(a => a.patient === req.user.name);
+  const mine = (data.appointments || []).filter(a => a.patient.toLowerCase() === req.user.name.toLowerCase());
   res.json({ appointments: mine });
 });
 
-// POST /api/my/appointments — self-service booking with a server-side
-// double-booking check (the authoritative check — the UI check is just a
-// convenience that can be bypassed by calling this endpoint directly).
-router.post('/mine', requireAuth, requireRole('patient'), async (req, res) => {
+// Shared booking handler function
+async function handleBooking(req, res) {
   const { valid, errors } = validateBooking(req.body || {});
   if (!valid) return res.status(400).json({ error: 'Please complete all fields.', fields: errors });
 
   const clinician = sanitizeText(req.body.clinician, { maxLength: 60 });
   const time = sanitizeText(req.body.time, { maxLength: 20 });
   const reason = sanitizeText(req.body.reason, { maxLength: 120 });
+  const patientName = req.user.role === 'patient' ? req.user.name : (sanitizeText(req.body.patient, { maxLength: 120 }) || req.user.name);
 
   const data = readAll();
-  const conflict = data.appointments.some(a => a.clinician === clinician && a.time === time);
+  const conflict = (data.appointments || []).some(a => a.clinician === clinician && a.time === time);
   if (conflict) {
     await logAudit({ actor: req.user.name, role: req.user.role, type: 'deny', action: `Booking rejected — ${clinician} / ${time} already taken (double-booking prevented)` });
-    return res.status(409).json({ error: 'That slot was just taken. Please choose another time.' });
+    return res.status(409).json({ error: 'That slot is already booked. Please choose another time or clinician.' });
   }
 
-  const appt = { id: uuid(), time, patient: req.user.name, clinician, type: reason, status: 'Scheduled' };
-  await update((d) => { d.appointments.push(appt); });
-  await logAudit({ actor: req.user.name, role: req.user.role, type: 'access', action: `Booked an appointment with ${clinician} at ${time}` });
-  res.status(201).json({ appointment: appt });
-});
+  const appt = { id: uuid(), time, patient: patientName, clinician, type: reason, status: 'Scheduled', date: new Date().toISOString().split('T')[0] };
+  await update((d) => {
+    if (!d.appointments) d.appointments = [];
+    d.appointments.push(appt);
+  });
+  await logAudit({ actor: req.user.name, role: req.user.role, type: 'access', action: `Booked appointment for ${patientName} with ${clinician} at ${time}` });
+  res.status(201).json({ appointment: appt, message: 'Appointment booked successfully.' });
+}
+
+// POST /api/appointments and POST /api/appointments/mine
+router.post('/', requireAuth, handleBooking);
+router.post('/mine', requireAuth, handleBooking);
 
 // POST /api/appointments/checkin — reception marks a patient as arrived
 router.post('/checkin', requireAuth, requireRole('reception'), async (req, res) => {
@@ -52,9 +62,9 @@ router.post('/checkin', requireAuth, requireRole('reception'), async (req, res) 
   if (!name) return res.status(400).json({ error: 'Enter the patient name to check in.' });
 
   const data = readAll();
-  const appt = data.appointments.find(a => a.patient.toLowerCase() === name.toLowerCase() && a.status !== 'Checked in');
+  const appt = (data.appointments || []).find(a => a.patient.toLowerCase() === name.toLowerCase() && a.status !== 'Checked in');
   await update((d) => {
-    const target = d.appointments.find(a => a.patient.toLowerCase() === name.toLowerCase() && a.status !== 'Checked in');
+    const target = (d.appointments || []).find(a => a.patient.toLowerCase() === name.toLowerCase() && a.status !== 'Checked in');
     if (target) target.status = 'Checked in';
   });
   await logAudit({ actor: req.user.name, role: req.user.role, type: 'access', action: `Checked in patient "${name}" at reception` });
@@ -62,13 +72,10 @@ router.post('/checkin', requireAuth, requireRole('reception'), async (req, res) 
 });
 
 // GET /api/appointments/availability?clinician=Dr.%20Osei
-// Deliberately returns only booked time slots — not who booked them — so a
-// patient can see what's free without the endpoint leaking other patients'
-// names to someone who isn't clinical or reception staff.
-router.get('/availability', requireAuth, requireRole('patient'), (req, res) => {
+router.get('/availability', requireAuth, (req, res) => {
   const clinician = String(req.query.clinician || '');
   const data = readAll();
-  const taken = data.appointments.filter(a => a.clinician === clinician).map(a => a.time);
+  const taken = (data.appointments || []).filter(a => a.clinician === clinician).map(a => a.time);
   res.json({ clinician, taken });
 });
 

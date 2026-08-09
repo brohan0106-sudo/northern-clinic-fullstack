@@ -1411,8 +1411,17 @@ function wireModule(route) {
       reason: $('#bookReason').value,
     };
     try {
-      const res = await api('/api/my/appointments', { method: 'POST', body });
-      toast('Appointment booked successfully!');
+      let res;
+      try {
+        res = await api('/api/appointments/mine', { method: 'POST', body });
+      } catch (err) {
+        if (err.status === 404) {
+          res = await api('/api/appointments', { method: 'POST', body });
+        } else {
+          throw err;
+        }
+      }
+      toast(res.message || 'Appointment booked successfully!');
       render();
     } catch (err) { toast(err.message); }
   });
