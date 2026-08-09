@@ -86,17 +86,18 @@ router.post('/invoices', requireRole('billing', 'admin'), async (req, res) => {
 });
 
 // POST /api/billing/payments — Record payment receipt
-router.post('/payments', requireRole('billing', 'admin'), async (req, res) => {
+router.post('/payments', requireRole('billing', 'admin', 'patient'), async (req, res) => {
   const { invoiceId, patientName, amount, method } = req.body || {};
-  if (!patientName || !amount) {
-    return res.status(400).json({ error: 'Patient name and payment amount are required.' });
+  const pName = (req.user.role === 'patient' ? req.user.name : patientName) || req.user.name;
+  if (!amount) {
+    return res.status(400).json({ error: 'Payment amount is required.' });
   }
 
   const payId = `PAY-${Math.floor(1000 + Math.random() * 9000)}`;
   const newPayment = {
     id: payId,
     invoiceId: invoiceId || 'INV-GEN',
-    patientName: patientName.trim(),
+    patientName: pName.trim(),
     amount: Number(amount) || 50.00,
     method: method || 'Credit Card (EFTPOS)',
     receiptRef: `REC-${Math.floor(10000 + Math.random() * 90000)}`,
@@ -114,7 +115,7 @@ router.post('/payments', requireRole('billing', 'admin'), async (req, res) => {
 
   await logAudit({
     actor: req.user.name, role: req.user.role, type: 'access',
-    action: `Recorded payment receipt #${newPayment.receiptRef} for ${patientName} ($${Number(amount).toFixed(2)})`,
+    action: `Recorded payment receipt #${newPayment.receiptRef} for ${pName} ($${Number(amount).toFixed(2)})`,
   });
 
   res.status(201).json({ payment: newPayment, message: 'Payment recorded successfully.' });
@@ -136,11 +137,14 @@ router.get('/accounts', requireRole('billing', 'admin'), async (req, res) => {
   });
 });
 
-// GET /api/billing/mine
+// GET /api/billing/mine — Patient portal invoices, claims, and payments
 router.get('/mine', requireRole('patient'), (req, res) => {
   const data = readAll();
-  const mine = (data.claims || []).filter(c => c.patient === req.user.name);
-  res.json({ claims: mine });
+  const name = req.user.name.toLowerCase();
+  const invoices = (data.invoices || []).filter(i => (i.patientName || '').toLowerCase() === name);
+  const claims = (data.claims || []).filter(c => (c.patient || '').toLowerCase() === name);
+  const payments = (data.payments || []).filter(p => (p.patientName || '').toLowerCase() === name);
+  res.json({ invoices, claims, payments });
 });
 
 module.exports = router;

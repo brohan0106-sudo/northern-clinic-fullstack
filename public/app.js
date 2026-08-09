@@ -1111,9 +1111,59 @@ async function renderMyRecords() {
 }
 
 async function renderMyBilling() {
-  const { claims } = await api('/api/claims/mine');
-  return pageHead('Patient Portal', 'My Claims & Billing', 'Your billing statements.') + `
-    <div class="card">${claimsTable(claims)}</div>`;
+  const data = await api('/api/billing/mine');
+  const invoices = data.invoices || [];
+  const claims = data.claims || [];
+
+  return pageHead('Patient Portal', 'My Claims & Billing Statements', 'View itemized invoices, file health fund claims, and settle copay balances.') + `
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-head"><h3>Itemized Care Invoices &amp; Patient Balance</h3></div>
+      ${invoices.length ? `
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice ID</th>
+            <th>Date</th>
+            <th>Total Fee</th>
+            <th>Health Fund Share</th>
+            <th>Your Copay</th>
+            <th>Status</th>
+            <th>Patient Action Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${invoices.map(inv => {
+            const hasClaim = claims.some(c => (c.patient || '').toLowerCase() === state.user.name.toLowerCase());
+            const isPaid = inv.status === 'Paid';
+            return `
+            <tr>
+              <td><strong>${escapeHtml(inv.id)}</strong></td>
+              <td>${inv.date}</td>
+              <td>${money(inv.subtotal)}</td>
+              <td><span class="chip chip-teal">${money(inv.insurerReimbursement)}</span></td>
+              <td><strong style="color:var(--clay);">${money(inv.patientCoPay)}</strong></td>
+              <td>${statusChip(inv.status)}</td>
+              <td>
+                ${isPaid ? '<span class="chip chip-success">Invoice Settled</span>' : `
+                  <div style="display:flex; gap:6px;">
+                    <button class="btn btn-small btn-secondary btn-file-claim" data-inv-id="${escapeHtml(inv.id)}" data-amount="${inv.insurerReimbursement}" ${hasClaim ? 'disabled' : ''}>
+                      ${hasClaim ? 'Claim Filed' : 'File Insurance Claim'}
+                    </button>
+                    <button class="btn btn-small btn-primary btn-pay-copay" data-inv-id="${escapeHtml(inv.id)}" data-copay="${inv.patientCoPay}">
+                      Pay Copay (${money(inv.patientCoPay)})
+                    </button>
+                  </div>
+                `}
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>` : '<div class="empty-state">No active invoices for your account.</div>'}
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Submitted Insurance Claims</h3></div>
+      ${claimsTable(claims)}
+    </div>`;
 }
 
 async function renderMyMessages() {
@@ -1424,6 +1474,39 @@ function wireModule(route) {
       toast(res.message || 'Appointment booked successfully!');
       render();
     } catch (err) { toast(err.message); }
+  });
+
+  // Patient Portal: File Insurance Claim
+  $$('.btn-file-claim').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const amount = Number(btn.dataset.amount) || 135.00;
+      const payer = prompt('Select your Health Insurance Provider (e.g. Medibank, Medicare, Bupa, HCF, NIB):', 'Medibank');
+      if (!payer) return;
+      try {
+        const res = await api('/api/claims', {
+          method: 'POST',
+          body: { patient: state.user.name, payer, amount, procedureCode: 'GP-01' }
+        });
+        toast(res.message || 'Insurance claim filed successfully! Reception will verify your policy.');
+        render();
+      } catch (err) { toast(err.message); }
+    });
+  });
+
+  // Patient Portal: Pay Copay Balance
+  $$('.btn-pay-copay').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const invId = btn.dataset.invId;
+      const copay = Number(btn.dataset.copay) || 45.00;
+      try {
+        const res = await api('/api/billing/payments', {
+          method: 'POST',
+          body: { invoiceId: invId, patientName: state.user.name, amount: copay, method: 'Credit Card (EFTPOS)' }
+        });
+        toast(res.message || 'Copay payment recorded successfully!');
+        render();
+      } catch (err) { toast(err.message); }
+    });
   });
 
   // Advance Workflow Step
