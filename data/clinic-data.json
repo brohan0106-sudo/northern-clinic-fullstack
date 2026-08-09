@@ -187,6 +187,15 @@
       "insurancePayer": "NIB",
       "policyNumber": "NI-77182",
       "emergencyContact": "Helen Clarke (0434 998 120)"
+    },
+    {
+      "id": "4708",
+      "name": "E2E Test Patient",
+      "dob": "10 May 1994",
+      "allergies": "Penicillin",
+      "phone": "0499 888 777",
+      "lastVisit": "New patient",
+      "flag": "new"
     }
   ],
   "doctors": [
@@ -523,7 +532,8 @@
       "tier": "Gold Comprehensive Extra",
       "copay": 0,
       "expiryDate": "31 Dec 2026",
-      "status": "Verified"
+      "status": "Verified",
+      "actionNote": "Coverage verified by reception staff"
     },
     {
       "policyId": "POL-102",
@@ -575,7 +585,8 @@
       "tier": "Gold Comprehensive Extra",
       "copay": 0,
       "expiryDate": "31 Dec 2026",
-      "status": "Verified"
+      "status": "Verified",
+      "actionNote": "Coverage verified by reception staff"
     },
     {
       "policyId": "POL-102",
@@ -619,6 +630,24 @@
     }
   ],
   "claims": [
+    {
+      "id": "CLM-47510",
+      "patient": "E2E Test Patient",
+      "payer": "Medibank",
+      "amount": 195,
+      "status": "Submitted",
+      "date": "2026-08-09",
+      "procedureCode": "GP-01"
+    },
+    {
+      "id": "CLM-54908",
+      "patient": "E2E Test Patient",
+      "payer": "Medibank",
+      "amount": 195,
+      "status": "Submitted",
+      "date": "2026-08-09",
+      "procedureCode": "GP-01"
+    },
     {
       "id": "CLM-10422",
       "patient": "M. Alvarez",
@@ -732,6 +761,36 @@
   ],
   "invoices": [
     {
+      "id": "INV-2026-304",
+      "patientName": "E2E Test Patient",
+      "date": "2026-08-09",
+      "items": [
+        {
+          "desc": "General Consult & Pathology",
+          "fee": 195
+        }
+      ],
+      "subtotal": 195,
+      "insurerReimbursement": 146.25,
+      "patientCoPay": 48.75,
+      "status": "Paid"
+    },
+    {
+      "id": "INV-2026-609",
+      "patientName": "E2E Test Patient",
+      "date": "2026-08-09",
+      "items": [
+        {
+          "desc": "General Consult & Pathology",
+          "fee": 195
+        }
+      ],
+      "subtotal": 195,
+      "insurerReimbursement": 146.25,
+      "patientCoPay": 48.75,
+      "status": "Paid"
+    },
+    {
       "id": "INV-2026-001",
       "patientName": "M. Alvarez",
       "date": "22 Jul 2026",
@@ -797,6 +856,24 @@
     }
   ],
   "payments": [
+    {
+      "id": "PAY-9290",
+      "invoiceId": "INV-2026-304",
+      "patientName": "E2E Test Patient",
+      "amount": 48.75,
+      "method": "Credit Card (EFTPOS)",
+      "receiptRef": "REC-73930",
+      "date": "2026-08-09"
+    },
+    {
+      "id": "PAY-8133",
+      "invoiceId": "INV-2026-609",
+      "patientName": "E2E Test Patient",
+      "amount": 48.75,
+      "method": "Credit Card (EFTPOS)",
+      "receiptRef": "REC-62974",
+      "date": "2026-08-09"
+    },
     {
       "id": "PAY-8801",
       "invoiceId": "INV-2026-001",
@@ -902,6 +979,28 @@
       "recommendations": "Follow up with GP in 7 days; avoid known allergens; seek immediate care if breathing deteriorates.",
       "labResults": "Full blood count within normal parameters. Inflammatory markers negative.",
       "ts": 1786104863848
+    },
+    {
+      "id": "e6f568c6-7228-4e7b-b269-6c2a810e0758",
+      "patientName": "M. Alvarez",
+      "clinician": "Dr. A. Osei",
+      "chiefComplaint": "Acute productive cough &amp; dyspnoea",
+      "findings": "Bilateral bronchial inflammation confirmed on exam.",
+      "therapy": "Nebuliser &amp; Amoxicillin administered.",
+      "recommendations": "Follow up in 7 days.",
+      "labResults": "Sputum culture negative. WBC 11.2.",
+      "ts": 1786252607240
+    },
+    {
+      "id": "1a4f43d9-450e-40ee-9474-80473fd22cb3",
+      "patientName": "M. Alvarez",
+      "clinician": "Dr. A. Osei",
+      "chiefComplaint": "Acute productive cough &amp; dyspnoea",
+      "findings": "Bilateral bronchial inflammation confirmed on exam.",
+      "therapy": "Nebuliser &amp; Amoxicillin administered.",
+      "recommendations": "Follow up in 7 days.",
+      "labResults": "Sputum culture negative. WBC 11.2.",
+      "ts": 1786252757475
     }
   ],
   "auditLog": [
@@ -928,6 +1027,286 @@
       "role": "clinician",
       "type": "access",
       "action": "PHI viewed — Dr. A. Osei inspected patient record #4482"
+    },
+    {
+      "id": "9c35853c-153b-4532-9bcf-450e7f1b5eef",
+      "ts": 1786252606954,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "193a09c4-fef1-4cdd-8200-687f074bc886",
+      "ts": 1786252607010,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "0bd4765a-5cd0-457d-8237-cfc489d0e7ce",
+      "ts": 1786252607027,
+      "actor": "E2E Test Patient",
+      "role": "anonymous",
+      "type": "access",
+      "action": "New patient registered: E2E Test Patient (pending first appointment)"
+    },
+    {
+      "id": "e1c6b230-af1c-4e97-a856-fdcdf5a974d7",
+      "ts": 1786252607039,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Viewed patient roster (MRNs masked)"
+    },
+    {
+      "id": "4605af11-732d-4457-a18d-d78088ee1c20",
+      "ts": 1786252607056,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Insurance coverage for M. Alvarez updated to Verified"
+    },
+    {
+      "id": "2fa225b4-c5d3-4305-aa8a-b69c27fff4ff",
+      "ts": 1786252607194,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "d519ffec-9ca2-454d-9694-6e52368fc90d",
+      "ts": 1786252607231,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "e92db858-bf3b-495c-b9ae-994bb964ce39",
+      "ts": 1786252607245,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "access",
+      "action": "Saved a discharge summary for M. Alvarez"
+    },
+    {
+      "id": "f2fcffff-868b-46f6-914f-2fcf44197844",
+      "ts": 1786252607394,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "55665316-64bc-4712-8402-1b605bca1a34",
+      "ts": 1786252607430,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "588822c6-a64f-4750-a143-dea375da13c0",
+      "ts": 1786252607438,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Submitted new insurance claim #CLM-54908 for E2E Test Patient ($195.00)"
+    },
+    {
+      "id": "bacdcf37-70d3-40d0-9792-2583b2d13e4b",
+      "ts": 1786252607448,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Generated itemized invoice #INV-2026-609 for E2E Test Patient ($195.00)"
+    },
+    {
+      "id": "4a3b267a-3627-4acd-9406-ee952dda6fd5",
+      "ts": 1786252607459,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Recorded payment receipt #REC-62974 for E2E Test Patient ($48.75)"
+    },
+    {
+      "id": "acae9b8a-65ae-4176-aa83-f36bfdb3722a",
+      "ts": 1786252607519,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Auth Test & Account Lockout</strong> — PASS"
+    },
+    {
+      "id": "e4c7c7cc-4300-47ba-a6c6-66685cd60599",
+      "ts": 1786252607522,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>RBAC Access Enforcement</strong> — PASS"
+    },
+    {
+      "id": "18eb520a-b6a0-47b7-94a0-856c5d0c1eac",
+      "ts": 1786252607526,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Double-Booking Conflict Prevention</strong> — PASS"
+    },
+    {
+      "id": "b170d246-b9d8-4cec-be17-ce179cc062fd",
+      "ts": 1786252607530,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Duplicate Registration Rejection</strong> — PASS"
+    },
+    {
+      "id": "14332753-e84e-49f0-98e2-85eeed7362d0",
+      "ts": 1786252607534,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Discharge Summary 5-Field Validation</strong> — PASS"
+    },
+    {
+      "id": "49d698fd-3c0f-4a9a-a399-6022e428e09f",
+      "ts": 1786252757192,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "489b9947-430d-42cb-8001-e2d89176a92b",
+      "ts": 1786252757234,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "24c067e1-fa02-4727-b50a-bb0ac2f79bad",
+      "ts": 1786252757246,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Viewed patient roster (MRNs masked)"
+    },
+    {
+      "id": "244a494f-75ec-4efc-b1d2-78a9b822dc37",
+      "ts": 1786252757258,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Insurance coverage for M. Alvarez updated to Verified"
+    },
+    {
+      "id": "ea82da46-fb61-4a2c-a1e7-f703942f9968",
+      "ts": 1786252757409,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "21c88710-52e7-4f2f-8899-99c730da77cc",
+      "ts": 1786252757468,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "075035b0-5c7b-45d1-b9ac-43b6cf3c1c29",
+      "ts": 1786252757478,
+      "actor": "Dr. A. Osei",
+      "role": "clinician",
+      "type": "access",
+      "action": "Saved a discharge summary for M. Alvarez"
+    },
+    {
+      "id": "8a2aa9e6-cb04-4b25-be48-f37c263f256a",
+      "ts": 1786252757632,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "auth",
+      "action": "Credential check passed — MFA challenge issued"
+    },
+    {
+      "id": "ab70fbdb-a73a-4d53-9225-3cc5334b5b36",
+      "ts": 1786252757670,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "auth",
+      "action": "MFA verified — session started"
+    },
+    {
+      "id": "37cf20d3-862e-4b10-932b-de0e0d73600a",
+      "ts": 1786252757682,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Submitted new insurance claim #CLM-47510 for E2E Test Patient ($195.00)"
+    },
+    {
+      "id": "fac9f0e6-daaa-4983-b794-09881ee2bca7",
+      "ts": 1786252757692,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Generated itemized invoice #INV-2026-304 for E2E Test Patient ($195.00)"
+    },
+    {
+      "id": "536eda3d-0c16-42f0-b933-0802ed755473",
+      "ts": 1786252757702,
+      "actor": "K. Patel",
+      "role": "billing",
+      "type": "access",
+      "action": "Recorded payment receipt #REC-73930 for E2E Test Patient ($48.75)"
+    },
+    {
+      "id": "b7fff8be-d752-48d8-96b5-3ead7866463e",
+      "ts": 1786252757765,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Auth Test & Account Lockout</strong> — PASS"
+    },
+    {
+      "id": "87695a17-77ed-4a09-9fb6-025d9dbdcec6",
+      "ts": 1786252757767,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>RBAC Access Enforcement</strong> — PASS"
+    },
+    {
+      "id": "88c3447e-528b-4dbc-9866-a091361b80e1",
+      "ts": 1786252757771,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Double-Booking Conflict Prevention</strong> — PASS"
+    },
+    {
+      "id": "ddcd10cd-0fe0-4a45-8aa4-f825ab7022a7",
+      "ts": 1786252757774,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Duplicate Registration Rejection</strong> — PASS"
+    },
+    {
+      "id": "6060d7bb-e79c-45be-92ec-75c91a7f76f7",
+      "ts": 1786252757777,
+      "actor": "R. Nguyen",
+      "role": "reception",
+      "type": "access",
+      "action": "Executed test: <strong>Discharge Summary 5-Field Validation</strong> — PASS"
     }
   ],
   "notifications": [

@@ -855,18 +855,35 @@ function renderAddPatient() {
 /* ---------- Medical Records & Prescriptions ---------- */
 async function renderMedicalRecords() {
   const { medicalRecords } = await api('/api/medical-records');
+  const canRecord = ['clinician', 'admin'].includes(state.user.role);
+
   return pageHead('Clinical', 'Medical Records & Clinical History', 'Full clinical progress notes, diagnoses, and vitals history.') + `
-    <div class="card">
-      <table><thead><tr><th>Date</th><th>Patient Name</th><th>Doctor</th><th>Diagnosis (ICD)</th><th>BP / Pulse</th><th>Clinical Notes</th></tr></thead><tbody>
-        ${medicalRecords.map(r => `<tr>
-          <td>${r.date}</td>
-          <td><strong>${escapeHtml(r.patientName)}</strong></td>
-          <td>${escapeHtml(r.doctorName)}</td>
-          <td><span class="chip chip-teal">${escapeHtml(r.diagnosis)}</span></td>
-          <td>${r.bp || '120/80'} (${r.pulse || 72} bpm)</td>
-          <td><small style="color:var(--ink-soft);">${escapeHtml(r.notes)}</small></td>
-        </tr>`).join('')}
-      </tbody></table>
+    <div class="grid grid-3">
+      <div class="card" style="grid-column: span 2;">
+        <div class="card-head"><h3>Patient Medical History &amp; Vitals</h3></div>
+        <table><thead><tr><th>Date</th><th>Patient Name</th><th>Doctor</th><th>Diagnosis (ICD)</th><th>BP / Pulse</th><th>Clinical Notes</th></tr></thead><tbody>
+          ${(medicalRecords || []).map(r => `<tr>
+            <td>${r.date}</td>
+            <td><strong>${escapeHtml(r.patientName)}</strong></td>
+            <td>${escapeHtml(r.doctorName)}</td>
+            <td><span class="chip chip-teal">${escapeHtml(r.diagnosis)}</span></td>
+            <td>${r.bp || '120/80'} (${r.pulse || 72} bpm)</td>
+            <td><small style="color:var(--ink-soft);">${escapeHtml(r.notes)}</small></td>
+          </tr>`).join('')}
+        </tbody></table>
+      </div>
+      ${canRecord ? `
+      <div class="card">
+        <div class="card-head"><h3>Record Vitals &amp; Progress Note</h3></div>
+        <form id="addRecordForm">
+          <label class="field"><span>Patient Name</span><input type="text" id="recPatient" placeholder="e.g. M. Alvarez" required></label>
+          <label class="field"><span>ICD Diagnosis</span><input type="text" id="recDiagnosis" placeholder="e.g. Acute Bronchitis (ICD J20)" required></label>
+          <label class="field"><span>Blood Pressure (BP)</span><input type="text" id="recBp" value="122/80 mmHg"></label>
+          <label class="field"><span>Pulse Rate (bpm)</span><input type="number" id="recPulse" value="74"></label>
+          <label class="field"><span>Clinical Progress Note</span><textarea id="recNotes" placeholder="Record patient symptoms, physical examination findings, and clinical evaluation..."></textarea></label>
+          <button type="submit" class="btn btn-primary btn-block">Save Clinical Record</button>
+        </form>
+      </div>` : ''}
     </div>`;
 }
 
@@ -1016,8 +1033,37 @@ function renderProfile() {
 /* ---------- Patient Portal Views ---------- */
 async function renderMyAppointments() {
   const { appointments } = await api('/api/appointments/mine');
-  return pageHead('Patient Portal', 'My Appointments', 'Your scheduled visits.') + `
-    <div class="card">${appointmentsTable(appointments)}</div>`;
+  const { consultants } = await api('/api/consultants');
+
+  return pageHead('Patient Portal', 'My Appointments', 'View scheduled visits and book new clinical consultations.') + `
+    <div class="grid grid-3">
+      <div class="card" style="grid-column: span 2;">
+        <div class="card-head"><h3>Your Scheduled Visits</h3></div>
+        ${appointmentsTable(appointments)}
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Book New Visit</h3></div>
+        <form id="bookApptForm">
+          <label class="field"><span>Select Doctor / Specialist</span>
+            <select id="bookDoctor">
+              ${(consultants || []).map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} — ${escapeHtml(c.specialization)} (${money(c.fee)})</option>`).join('')}
+            </select>
+          </label>
+          <label class="field"><span>Preferred Time Slot</span>
+            <select id="bookTime">
+              <option value="9:00 AM">9:00 AM</option>
+              <option value="9:30 AM">9:30 AM</option>
+              <option value="10:00 AM">10:00 AM</option>
+              <option value="11:15 AM">11:15 AM</option>
+              <option value="1:30 PM">1:30 PM</option>
+              <option value="2:30 PM">2:30 PM</option>
+            </select>
+          </label>
+          <label class="field"><span>Reason for Visit</span><input type="text" id="bookReason" placeholder="e.g. General Consult / Cardiology Follow-up" required></label>
+          <button type="submit" class="btn btn-primary btn-block">Confirm Appointment Booking</button>
+        </form>
+      </div>
+    </div>`;
 }
 
 async function renderMyRecords() {
@@ -1303,6 +1349,38 @@ function wireModule(route) {
     try {
       await api('/api/medical-records/prescriptions', { method: 'POST', body });
       toast('e-Prescription issued.');
+      render();
+    } catch (err) { toast(err.message); }
+  });
+
+  // Add Medical Record form
+  $('#addRecordForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const body = {
+      patientName: $('#recPatient').value,
+      diagnosis: $('#recDiagnosis').value,
+      bp: $('#recBp').value,
+      pulse: $('#recPulse').value,
+      notes: $('#recNotes').value,
+    };
+    try {
+      const res = await api('/api/medical-records', { method: 'POST', body });
+      toast(res.message);
+      render();
+    } catch (err) { toast(err.message); }
+  });
+
+  // Book Appointment form (Patient Portal)
+  $('#bookApptForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const body = {
+      clinician: $('#bookDoctor').value,
+      time: $('#bookTime').value,
+      reason: $('#bookReason').value,
+    };
+    try {
+      const res = await api('/api/my/appointments', { method: 'POST', body });
+      toast('Appointment booked successfully!');
       render();
     } catch (err) { toast(err.message); }
   });
