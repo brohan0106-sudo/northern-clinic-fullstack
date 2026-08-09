@@ -377,7 +377,7 @@ async function refreshAudit() {
   if (!['admin', 'reception', 'clinician', 'billing'].includes(state.user?.role)) return;
   try {
     const data = await api('/api/audit');
-    state.auditEntries = (data.entries || []).slice().reverse();
+    state.auditEntries = data.entries || [];
     renderAuditDrawer();
     if (state.route === 'audit-logs') {
       const tbody = $('#auditLogTableBody');
