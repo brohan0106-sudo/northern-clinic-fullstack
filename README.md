@@ -1,6 +1,6 @@
-# Northern Medical Clinic — Clinic Management System
+# Northern Medical Clinic System
 
-Full-stack artefact for ICT3055 Assessment 3 (Artefact and User Documentation).
+Production-grade full-stack Clinic Management System for Northern Medical Clinic.
 Node/Express backend with real authentication, RBAC, and audit logging, serving
 a browser frontend. Data persists to a local JSON file — no external database
 or account needed to run it.

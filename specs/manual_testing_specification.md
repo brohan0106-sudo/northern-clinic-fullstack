@@ -1,7 +1,7 @@
 # Northern Medical Clinic Management System — Feature Specification & Manual Testing Guide
 
 **Date:** August 7, 2026  
-**Project:** Northern Medical Clinic System (ICT3055 Capstone B)  
+**Project:** Northern Medical Clinic Enterprise System  
 **File Location:** `specs/manual_testing_specification.md`
 
 ---

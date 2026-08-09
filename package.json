@@ -1,7 +1,7 @@
 {
   "name": "northern-clinic-system",
   "version": "1.0.0",
-  "description": "Northern Medical Clinic — full-stack clinic management system (ICT3055 Assessment 3 artefact)",
+  "description": "Northern Medical Clinic — full-stack enterprise clinic management system",
   "main": "server/index.js",
   "type": "commonjs",
   "scripts": {
